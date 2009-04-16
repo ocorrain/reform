@@ -1,28 +1,45 @@
 (in-package #:reform)
 
 (defun create-handlers ()
+  (setq hunchentoot:*dispatch-table*
+	(list 'hunchentoot:dispatch-easy-handlers
+	      (hunchentoot:create-folder-dispatcher-and-handler
+	       "/css/" (make-pathname
+			:directory '(:absolute "home" "reform" "src"
+				     "blueprint-css")))
+	      (hunchentoot:create-folder-dispatcher-and-handler
+	       "/images/" (make-pathname
+			   :directory '(:absolute "home" "reform" "lisp"
+					"site" "reform" "images")))
+	      (hunchentoot:create-folder-dispatcher-and-handler
+	       "/js/" (make-pathname
+		       :directory '(:absolute "home" "reform" "lisp"
+				    "site" "reform" "js")))
+	      (hunchentoot:create-prefix-dispatcher "/" 'teaser-page)
+	      'hunchentoot:default-dispatcher)))
+
   (push (hunchentoot:create-prefix-dispatcher "/" #'teaser-page)
 	hunchentoot:*dispatch-table*)
   (push (hunchentoot:create-folder-dispatcher-and-handler
 	 "/css/" (make-pathname
-		  :directory '(:absolute "home" "ocorrain" "src"
+		  :directory '(:absolute "home" "reform" "src"
 			       "blueprint-css")))
 	hunchentoot:*dispatch-table*)
 
   (push (hunchentoot:create-folder-dispatcher-and-handler
 	 "/images/" (make-pathname
-		     :directory '(:absolute "home" "ocorrain" "lisp"
+		     :directory '(:absolute "home" "reform" "lisp"
 				  "site" "reform" "images")))
 	hunchentoot:*dispatch-table*)
 
   (push (hunchentoot:create-folder-dispatcher-and-handler
 	 "/js/" (make-pathname
-		 :directory '(:absolute "home" "ocorrain" "lisp"
+		 :directory '(:absolute "home" "reform" "lisp"
 			      "site" "reform" "js")))
 	hunchentoot:*dispatch-table*))
 
 
-(defparameter *acceptor* (make-instance 'hunchentoot:acceptor :port 4242))
+(defparameter *acceptor* (make-instance 'hunchentoot:acceptor :port 4343))
 
 (defun start-reform-site ()
   (get-store)

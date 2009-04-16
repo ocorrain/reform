@@ -6,7 +6,7 @@
 (defun get-store ()
   (or *reform-store*
       (setf *reform-store*
-	    (elephant:open-store '(:bdb "/home/ocorrain/reform/")))))
+	    (elephant:open-store '(:bdb "/home/reform/store//")))))
 
 (defun get-next-id ()
   (if-bind (current-id (ele:get-from-root "current"))
