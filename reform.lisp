@@ -6,10 +6,15 @@
 
 (defparameter *ajax-handler-url* "/ajax")
 
+(defparameter *nuggets* '("If not now, when?"
+			  "Reforming the Republic"))
 
-(defparameter *acceptor* (make-instance 'hunchentoot:acceptor :port 4343))
+(defun get-nugget ()
+  (elt *nuggets* (random (length *nuggets*))))
 
-(defparameter *ajax-processor* (ht-ajax:make-ajax-processor
+(defvar *acceptor* (make-instance 'hunchentoot:acceptor :port 4343))
+
+(defvar *ajax-processor* (ht-ajax:make-ajax-processor
 				:type :lokris
 				:server-uri *ajax-handler-url*
 				:js-file-uris "/js/lokris.js"
@@ -89,7 +94,8 @@
 	((:div :class "span-17")
 	 (:hr)
 	 ((:h1 :class "alt") ((:a :href "/welcome.html") (:img :src "/images/reform.jpg")))
-	 ((:h5 :class "alt") (esc "ζον πολιτικόν")))
+	 ((:h3 :class "alt") (str (get-nugget))))
+	
 	((:div :class "span-7 last")
 	 (user-pane *standard-output*)
 	 )
@@ -258,7 +264,7 @@
 				       (hunchentoot:post-parameters*))))
     (when debate
       (when-bind (obj (ele:get-instance-by-value 'debate 'instance-id debate))
-	(let ((comment-obj (make-instance 'comment :comment comment)))
+	(let ((comment-obj (make-instance 'comment :comment comment :author (get-username (get-user)))))
 	  (if (equal vote "for")
 	      (push comment-obj (get-comments-for obj))
 	      (push comment-obj (get-comments-against obj)))))))

@@ -132,17 +132,24 @@
 (defun sort-comments (comments)
   (sort (copy-list comments) #'> :key #'get-votes))
 
+(defun clean-comments (debate)
+  (let ((for (get-comments-for debate))
+	(against (get-comments-against debate)))
+    (setf (get-comments-for debate) (remove nil for)
+	  (get-comments-against debate) (remove nil against))))
+
 (defmethod display-comments ((debate debate) stream)
+  (clean-comments debate)
   (let ((display-context (or (get-user) 'no-user)))
     (with-html-output (s stream :indent t)
       ((:div :class "span-11 colborder")
        (:script :type "text/javascript" :src "/js/rate.js")
        ((:h2 :class "alt") "For")
-       (dolist (c (sort-comments (get-comments-for debate)))
+       (dolist (c (sort-comments (remove nil (get-comments-for debate))))
 	 (display-comment c display-context s)))
       ((:div :class "span-12 last")
        ((:h2 :class "alt") "Against")
-       (dolist (c (sort-comments (get-comments-against debate)))
+       (dolist (c (sort-comments (remove nil (get-comments-against debate))))
 	 (display-comment c display-context s))))))
 
 
