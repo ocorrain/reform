@@ -131,3 +131,12 @@
     (hunchentoot:delete-session-value 'user)
     (hunchentoot:remove-session hunchentoot:*session*))
   (hunchentoot:redirect (hunchentoot:referer)))
+
+(hunchentoot:define-easy-handler (edit-users :uri "/edit-users.html")
+    ()
+  (with-standard-page (:title "Edit users")
+    ((:div :class "span-24 last")
+     (:ul (dolist (u (ele:get-instances-by-class 'user))
+	    (htm (:li ((:a :href (format nil "/edit.html?instance-id=~A&type=user"
+			 (get-id u)))
+		       "[ edit ]") (str (get-username u)))))))))
