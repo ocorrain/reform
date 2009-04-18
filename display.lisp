@@ -64,7 +64,7 @@
   (multiple-value-bind (teaser more?)
       (get-teaser (html->text (get-story obj)) 300)
     (with-html-output (s stream :indent t)
-      (:h6 ((:a :href (get-url obj)) (str (get-headline obj))) )
+      ((:h3 :class "alt") "Article: " ((:a :href (get-url obj)) (str (get-headline obj))) )
       (:p (str teaser)) 
        (when more?
 	 (htm ((:a :href (get-url obj)) "more..."))))))
@@ -73,6 +73,7 @@
   (with-html-output (s stream :indent t)
     (:h1 (str (get-title obj)))
     (:h3 (str (get-author obj)))
+    (print-tag-links obj s)
     (str (get-story obj))))
 
 (defmethod display ((obj user) (type display-short) stream)
@@ -83,12 +84,13 @@
 
 (defmethod display ((obj debate) (type display-short) stream)
   (with-html-output (s stream :indent t)
-    ((:h3 :class "alt") ((:a :href (get-url obj)) (str (get-motion obj))) )
+    ((:h3 :class "alt") "Debate: " ((:a :href (get-url obj)) (str (get-motion obj))) )
     (when-bind (rubric (get-rubric obj))
       (htm (:blockquote (str rubric))))))
 
 (defmethod display :after ((obj debate) (type display-full) stream)
   (with-html-output (s stream :indent t)
+    (print-tag-links obj s)
     (if (get-user)
 	(comment-form obj s)
 	(htm ((:a :href "/login.html") "Log in to vote and enter comments")))
@@ -99,6 +101,25 @@
     ((:h3 :class "alt") ((:a :href (get-url obj)) (str (get-tag-name obj))) )
     (when-bind (rubric (get-rubric obj))
       (htm (:blockquote (str rubric))))))
+
+(defmethod display ((obj tag) (type display-full) stream)
+  (with-html-output (s stream :indent t)
+    (:h1 (str (get-tag-name obj)) )
+    (when-bind (rubric (get-rubric obj))
+	       (htm (:blockquote (str rubric))))
+    (let* ((objects (get-tagged-objects obj))
+	   (midpoint (ceiling (/ (length objects) 2))))
+      (when objects
+	(htm ((:div :class "span-11 colborder")
+	      (dolist (o (subseq objects 0 midpoint))
+		(display o (short-display) s)
+		(htm (:hr))))
+	     ((:div :class "span-12 last")
+	      (dolist (o (subseq objects midpoint))
+		(display o (short-display) s)
+		(htm (:hr)))))))))
+
+
 
 (defmethod display-comment ((c comment) (user (eql 'no-user)) stream)
   (with-html-output (s stream :indent t)
@@ -165,6 +186,7 @@
   (with-html-output (s stream :indent t)
     (:h2 (str (get-headline obj)))
     (:h5 (str (get-author obj)))
+    (print-tag-links obj s)
     (str (get-story obj))))
 
 (defmethod get-title ((obj news))

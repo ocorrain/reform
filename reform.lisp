@@ -94,7 +94,9 @@
 	((:div :class "span-17")
 	 (:hr)
 	 ((:h1 :class "alt") ((:a :href "/welcome.html") (:img :src "/images/reform.jpg")))
-	 ((:h3 :class "alt") (str (get-nugget))))
+	 ((:h3 :class "alt") (str (get-nugget)))
+	 (:hr))
+	
 	
 	((:div :class "span-7 last")
 	 (user-pane *standard-output*)
@@ -214,14 +216,17 @@
      (when display
        (hunchentoot:log-message :info "Will now redirect to ~S" (get-redirect-url obj))
        (hunchentoot:redirect (get-redirect-url obj)))
-     (with-standard-page (:title "Edit object")
+     (with-standard-page (:title "Edit object" :ajax t)
        ((:div :class "span-15 colborder")
 	(:h2 (str (string-capitalize type)))
 	(when edit (htm (str "object saved")))
 	((:a :href (format nil"/delete.html?instance-id=~A&type=~A"
 			   (get-id obj) (symbol-name (type-of obj))))
 	 (:img :src "/images/delete.png"))
-	(html-form obj *standard-output*))
+	(html-form obj *standard-output*)
+	(when (typep obj 'tagged-object-mixin)
+	  (htm ((:hr) ((:p :id "tag-cloud")
+		       (print-tags-for-editing obj *standard-output*))))))
        ((:div :class "span-8 last")
 	(when messages
 	  (htm ((:div :class "error")
@@ -274,3 +279,35 @@
 (hunchentoot:define-easy-handler (rate :uri "/rate")
     ()
   (hunchentoot:log-message :info "RATE - ~S" (hunchentoot:post-parameters*)))
+
+
+
+(defun class-page (class-name title)
+  (let* ((all-instances (ele:get-instances-by-class class-name))
+	 (midpoint (ceiling (/ (length all-instances) 2))))
+    (with-standard-page (:title title)
+      ((:div :class "span-24 last")
+       (:h1 (str title)))
+      (if all-instances
+	  (htm ((:div :class "span-11 colborder")
+		(dolist (a (subseq all-instances 0 midpoint))
+		  (display a (short-display) *standard-output*)
+		  (htm (:hr))))
+	       ((:div :class "span-12 last")
+		(dolist (a (subseq all-instances midpoint))
+		  (display a (short-display) *standard-output*)
+		  (htm (:hr)))))
+	  (htm ((:div :class "span-24 last") "No news"))))))
+
+
+(hunchentoot:define-easy-handler (articles-page :uri "/articles.html")
+    ()
+  (class-page 'article "Articles"))
+
+(hunchentoot:define-easy-handler (debates-page :uri "/debates.html")
+    ()
+  (class-page 'debate "Debates"))
+
+(hunchentoot:define-easy-handler (news-page :uri "/news.html")
+    ()
+  (class-page 'news "News"))

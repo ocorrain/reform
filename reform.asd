@@ -23,4 +23,5 @@
 	       (:file "ajax")
 	       (:file "users")
 	       (:file "forms")
-	       (:file "display")))
+	       (:file "display")
+	       (:file "tags")))
