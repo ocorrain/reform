@@ -103,7 +103,7 @@ FlashVars=\"userID=32971071&styleURL=http://static.twitter.com/flash/widgets/pro
 (defparameter *twitter-include* "
 
 <div id=\"twitter_div\">
-<h3 class=\"alt\">reform@twitter</h2>
+<h3 class=\"alt\">reformdotie@twitter</h2>
 <ul id=\"twitter_update_list\"></ul>
 <a href=\"http://twitter.com/reformdotie\" id=\"twitter-link\"
 style=\"display:block;text-align:right;\">follow reform.ie on Twitter</a>
