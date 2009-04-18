@@ -225,7 +225,7 @@
 		       (push "This username is already taken, please choose another." messages)
 		       (setf (get-username obj) u))
 		   (if-bind (ou (get-user-by-name u))
-			    (if (/= (instance-id u) (instance-id ou))
+			    (if (/= (get-id obj) (get-id ou))
 				(push "This username is already taken, please choose another." messages))
 			    (setf (get-username obj) u))))
     (when-bind (e (get-form-field 'email parameters))
