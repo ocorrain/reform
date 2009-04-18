@@ -77,6 +77,43 @@
 	<link rel=\"stylesheet\" href=\"/css/reform.css\" type=\"text/css\">
 ")
 
+(defparameter *twitter-flash-include*
+  "
+<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\"
+codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,124,0\"
+width=\"290\" height=\"350\" id=\"TwitterWidget\" align=\"middle\">
+       <param name=\"allowScriptAccess\" value=\"always\" />
+       <param name=\"allowFullScreen\" value=\"false\" />
+       <param name=\"movie\"
+value=\"http://static.twitter.com/flash/widgets/profile/TwitterWidget.swf\"
+/>
+       <param name=\"quality\" value=\"high\" />
+       <param name=\"bgcolor\" value=\"#000000\" />
+       <param name=\"FlashVars\"
+value=\"userID=32971071&styleURL=http://static.twitter.com/flash/widgets/profile/velvetica.xml\">
+       <embed src=\"http://static.twitter.com/flash/widgets/profile/TwitterWidget.swf\"
+quality=\"high\" bgcolor=\"#000000\" width=\"290\" height=\"350\"
+name=\"TwitterWidget\" align=\"middle\" allowScriptAccess=\"sameDomain\"
+allowFullScreen=\"false\" type=\"application/x-shockwave-flash\"
+pluginspage=\"http://www.macromedia.com/go/getflashplayer\"
+FlashVars=\"userID=32971071&styleURL=http://static.twitter.com/flash/widgets/profile/velvetica.xml\"/>
+</object>
+")
+
+(defparameter *twitter-include* "
+
+<div id=\"twitter_div\">
+<h3 class=\"alt\">reform@twitter</h2>
+<ul id=\"twitter_update_list\"></ul>
+<a href=\"http://twitter.com/reformdotie\" id=\"twitter-link\"
+style=\"display:block;text-align:right;\">follow reform.ie on Twitter</a>
+</div>
+<script type=\"text/javascript\"
+src=\"http://twitter.com/javascripts/blogger.js\"></script>
+<script type=\"text/javascript\"
+src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitterCallback2&amp;count=5\"></script>
+")
+
 (defparameter *jquery-include* "
 
 ")
@@ -143,9 +180,13 @@
      (str (get-debates)))
     ((:div :class "span-7 last")
      (when-bind (news (get-news))
-		(htm
-		 (:h3 "News")
-		 (str (get-news)))))))
+     		(htm
+     		 (:h3 "News")
+     		 (str (get-news))))
+     (str *twitter-include*)
+     ;(str *twitter-flash-include*)
+ 
+     )))
 
 (defun get-debates ()
   (when-bind (top-2 (get-top-n 'debate 2))
