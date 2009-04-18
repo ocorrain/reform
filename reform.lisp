@@ -72,8 +72,10 @@
         <!--[if IE]>
             <link rel=\"stylesheet\" href=\"/css/blueprint/ie.css\" type=\"text/css\" media=\"screen, projection\">
         <![endif]-->
-	<link rel=\"stylesheet\" href=\"/css/blueprint/plugins/fancy-type/screen.css\">
-<!-- end Framework CSS -->")
+	<link rel=\"stylesheet\" href=\"/css/blueprint/plugins/fancy-type/screen.css\" type=\"text/css\">
+<!-- end Framework CSS -->
+	<link rel=\"stylesheet\" href=\"/css/reform.css\" type=\"text/css\">
+")
 
 (defparameter *jquery-include* "
 
@@ -94,13 +96,17 @@
 	((:div :class "span-17")
 	 (:hr)
 	 ((:h1 :class "alt") ((:a :href "/welcome.html") (:img :src "/images/reform.jpg")))
-	 ((:h3 :class "alt") (str (get-nugget)))
-	 (:hr))
+	 ((:h3 :class "alt") (str (get-nugget))))
 	
 	
 	((:div :class "span-7 last")
-	 (user-pane *standard-output*)
-	 )
+	 (user-pane *standard-output*))
+	((:div :class "span-24 last")
+	 ((:p :class "menulink")
+	 ((:a :class "menulink" :href "/news.html") "News") " - "
+	 ((:a :class "menulink" :href "/articles.html") "Articles") " - "
+	 ((:a :class "menulink" :href "/debates.html") "Debates")))
+
 	;; (:hr)
 	;; ((:p :align "center") "News | Articles | Debates")
 	;; (:hr)

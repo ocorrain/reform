@@ -65,15 +65,16 @@
       (get-teaser (html->text (get-story obj)) 300)
     (with-html-output (s stream :indent t)
       ((:h3 :class "alt") "Article: " ((:a :href (get-url obj)) (str (get-headline obj))) )
-      (:p (str teaser)) 
-       (when more?
-	 (htm ((:a :href (get-url obj)) "more..."))))))
+      (:p (str teaser)
+	  (when more?
+	 (htm ((:a :href (get-url obj)) "(more)")))))))
+
 
 (defmethod display ((obj article) (type display-full) stream)
   (with-html-output (s stream :indent t)
     (:h1 (str (get-title obj)))
-    (:h3 (str (get-author obj)))
-    (print-tag-links obj s)
+    (:p (:i (fmt "&mdash;by ~A" (get-author obj))))
+    (:p (print-tag-links obj s))
     (str (get-story obj))))
 
 (defmethod display ((obj user) (type display-short) stream)
