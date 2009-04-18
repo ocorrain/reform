@@ -106,10 +106,6 @@
 	 ((:a :class "menulink" :href "/news.html") "News") " - "
 	 ((:a :class "menulink" :href "/articles.html") "Articles") " - "
 	 ((:a :class "menulink" :href "/debates.html") "Debates")))
-
-	;; (:hr)
-	;; ((:p :align "center") "News | Articles | Debates")
-	;; (:hr)
 	,@body)))))
 
 
@@ -168,7 +164,7 @@
 
 
 (defun get-top-tags ()
-  (let ((top-3 (get-top-n 'article 3)))
+  (let ((top-3 (get-top-n 'tag 3)))
     (when top-3
       (with-html-output-to-string (s nil :indent t)
 	((:div :class "span-7 colborder")
