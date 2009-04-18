@@ -30,6 +30,26 @@
     (subseq (sort (copy-list instances) sort-fn :key key)
 	    0 (min n (length instances)))))
 
+(defun get-top-with-sticky (class n)
+  (let ((instances (ele:get-instances-by-class class)))
+    (subseq (sort (copy-list instances)
+		  (lambda (i1 i2)
+		    (cond ((and (sticky? i1)
+				(sticky? i2))
+			   (< (get-posted i1) (get-posted i2)))
+			  ((sticky? i1) t)
+			  ((sticky? i2) nil)
+			  (t (< (get-posted i1) (get-posted i2))))))
+	    0 (min n (length instances)))))
+
+(defmethod display :before ((obj post) (type display-short) stream)
+  (when (has-capability* 'poster)
+    (with-html-output (s stream)
+      ((:a :href (format nil "/edit.html?instance-id=~A&type=~A"
+			 (get-id obj) (symbol-name (type-of obj))))
+       "[ edit ]"))))
+
+
 (defmethod display ((obj news) (type display-short)  stream)
   (multiple-value-bind (teaser more?)
       (get-teaser (html->text (get-story obj)))
@@ -49,6 +69,18 @@
        (when more?
 	 (htm ((:a :href (get-url obj)) "more..."))))))
 
+(defmethod display ((obj article) (type display-full) stream)
+  (with-html-output (s stream :indent t)
+    (:h1 (str (get-title obj)))
+    (:h3 (str (get-author obj)))
+    (str (get-story obj))))
+
+(defmethod display ((obj user) (type display-short) stream)
+  (with-html-output (s stream)
+    (:h6 (str (get-username obj)))
+    (:ul (dolist (c (get-capabilities obj))
+	   (htm (:li (str c)))))))
+
 (defmethod display ((obj debate) (type display-short) stream)
   (with-html-output (s stream :indent t)
     ((:h3 :class "alt") ((:a :href (get-url obj)) (str (get-motion obj))) )
@@ -59,8 +91,14 @@
   (with-html-output (s stream :indent t)
     (if (get-user)
 	(comment-form obj s)
-	(htm ((:a :href "#") "Log in to vote and enter comments")))
+	(htm ((:a :href "/login.html") "Log in to vote and enter comments")))
     (display-comments obj s)))
+
+(defmethod display ((obj tag) (type display-short) stream)
+  (with-html-output (s stream :indent t)
+    ((:h3 :class "alt") ((:a :href (get-url obj)) (str (get-tag-name obj))) )
+    (when-bind (rubric (get-rubric obj))
+      (htm (:blockquote (str rubric))))))
 
 (defmethod display-comment ((c comment) (user (eql 'no-user)) stream)
   (with-html-output (s stream :indent t)
@@ -73,15 +111,15 @@
 (defmethod display-comment ((c comment) (user user) stream)
   (with-html-output (s stream :indent t)
     ((:div :class "span-1")
-     ((:p :style "text-align: center;font-size: 16pt;color: #c4b6b6;")
-      ((:a :class "rating" :style "text-decoration: none;" :href "" :id (get-id c)) "+") (:br)
-      ((:a :class "rating" :style "text-decoration: none;" :href "" :id (get-id c)) "-")))
+     (str (cond ((member c (get-liked user)) (print-rating c 'positive))
+		((member c (get-disliked user)) (print-rating c 'negative))
+		(t (print-rating c 'neutral)))))
     ((:div :class "span-10 last")
      ((:h6 :class "alt")
-		 (fmt "Posted at ~a by ~A"
-		      (timestring (get-posted c))
-		      (get-author c)))
-		(:p (esc (get-comment c))))
+      (fmt "Posted at ~a by ~A"
+	   (timestring (get-posted c))
+	   (get-author c)))
+     (:p (esc (get-comment c))))
     (:hr :class "space")))
 
 
@@ -91,17 +129,20 @@
     (declare (ignore second day dl z))
     (format nil "~a:~2,'0d ~a/~a/~a" hour minute date month year)))
 
+(defun sort-comments (comments)
+  (sort (copy-list comments) #'> :key #'get-votes))
+
 (defmethod display-comments ((debate debate) stream)
   (let ((display-context (or (get-user) 'no-user)))
     (with-html-output (s stream :indent t)
       ((:div :class "span-11 colborder")
        (:script :type "text/javascript" :src "/js/rate.js")
        ((:h2 :class "alt") "For")
-       (dolist (c (get-comments-for debate))
+       (dolist (c (sort-comments (get-comments-for debate)))
 	 (display-comment c display-context s)))
       ((:div :class "span-12 last")
        ((:h2 :class "alt") "Against")
-       (dolist (c (get-comments-against debate))
+       (dolist (c (sort-comments (get-comments-against debate)))
 	 (display-comment c display-context s))))))
 
 
@@ -125,13 +166,17 @@
 (defmethod get-title ((obj debate))
   (get-motion obj))
 
+(defmethod get-title ((obj tag))
+  (get-tag-name obj))
+
 (hunchentoot:define-easy-handler (object-display :uri "/display.html"
 						 :default-request-type :get)
     ((id :parameter-type 'integer)
      (type :parameter-type #'get-valid-type))
   (when (and id type)
     (if-bind (obj (ele:get-instance-by-value type 'instance-id id))
-	     (with-standard-page (:title (get-title obj))
-	       (display obj (full-display) *standard-output*))
+	     (with-standard-page (:title (get-title obj) :ajax t)
+	       ((:div :class "span-24 last")
+		(display obj (full-display) *standard-output*)))
 	     (error "Object not found"))))
 

@@ -6,15 +6,16 @@
 (defun get-store ()
   (or *reform-store*
       (setf *reform-store*
-	    (elephant:open-store '(:bdb "/home/reform/store//")))))
+	    (elephant:open-store (get-config-option :elephant-spec)))))
 
 (defun get-next-id ()
   (if-bind (current-id (ele:get-from-root "current"))
     (ele:add-to-root "current" (incf current-id)) 
     (ele:add-to-root "current" 0)))
 
-(defclass tag (reform-base-class sticky-object-mixin)
+(defclass tag (post)
   ((name :initarg :name :initform nil :accessor get-tag-name :index t)
+   (rubric :initarg :rubric :initform nil :accessor get-rubric)
    (objects :initform '() :accessor get-tagged-objects))
   (:metaclass ele:persistent-metaclass))
 

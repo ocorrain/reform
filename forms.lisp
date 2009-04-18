@@ -1,6 +1,6 @@
 (in-package #:reform)
 
-(defmethod html-form :around ((object post) output-stream)
+(defmethod html-form :around ((object post) output-stream &optional new)
   (with-html-output (s output-stream :indent t)
     ((:form :method "post" :enctype "multipart/form-data" :action "/edit.html")
      (call-next-method object output-stream)
@@ -24,8 +24,20 @@
      (:input :type "submit" :name "submit" :value "Save")
      (:input :type "submit" :name "display" :value "Finish"))))
 
+(defmethod html-form ((object tag) output-stream &optional new)
+  (with-html-output (s output-stream :indent t)
+    (:fieldset
+     (:legend "Tag")
+     (:table
+      (:tr (:td ((:label :for "name") "Name"))
+	   (:td (:input :name "name" :type "text" :id "name"
+			:value (esc (or (get-tag-name object) "")))))
+      (:tr (:td ((:label :for "rubric") "Rubric")
+		(:p "Optional exposition of the theme"))
+	   (:td ((:textarea :name "rubric" :rows 10 :cols 62)
+		 (str (or (get-rubric object) "")))))))))
 
-(defmethod html-form ((object news) output-stream)
+(defmethod html-form ((object news) output-stream &optional new)
   (with-html-output (s output-stream :indent t)
     (:fieldset
      (:legend "News item")
@@ -55,14 +67,13 @@
     ((:form :method "post" :action "/post-comment.html")
      (:textarea :style "width: 500px; height: 75px"
 		:name "comment" :rows 5 :cols 20) (:br)
-     (:input :type "radio" :name "in-favour" :value "for" :checked "checked") "For" 
-     (:input :type "radio" :name "in-favour" :value "against") "Against"
-     (:input :type "hidden" :name "debate" :value (get-id debate))
-     ((:button :type "submit") "comment"))))
+     ((:button :type "submit" :name "vote" :value "for") "vote for")
+     ((:button :type "submit" :name "vote":value "against") "vote against")
+     (:input :type "hidden" :name "debate" :value (get-id debate)))))
 
 
 
-(defmethod html-form ((object article) output-stream)
+(defmethod html-form ((object article) output-stream &optional new)
   (with-html-output (s output-stream :indent t)
     (:fieldset
      (:legend "News item")
@@ -78,7 +89,7 @@
 	   (:td (:input :type "file" :name "upload")))))))
 
 
-(defmethod html-form ((object debate) output-stream)
+(defmethod html-form ((object debate) output-stream &optional new)
   (with-html-output (s output-stream :indent t)
     (:fieldset
      (:legend "Debate")
@@ -91,26 +102,33 @@
 	   (:td ((:textarea :name "rubric" :rows 10 :cols 62)
 		 (str (or (get-rubric object) "")))))))))
 
+(defparameter *capabilities* '(admin poster moderator))
 
-(defmethod html-form ((object user) output-stream)
+(defmethod html-form ((object user) output-stream &optional new)
   (with-html-output (s output-stream :indent t)
     ((:form :method "post" :enctype "multipart/form-data" :action "/edit.html")
      (:fieldset
       (:legend "User information")
       (:table
        (:tr (:td ((:label :for "username") "Username"))
-	    (:td (:input :type "text" :name "username")))
+	    (:td (:input :type "text" :name "username" :value (or (get-username object) ""))))
        (:tr (:td ((:label :for "password") "Password"))
 	    (:td (:input :type "password" :name "password")))
        (:tr (:td ((:label :for "password2") "Please type your password again"))
-	    (:td (:input :type "password2" :name "password"))))
-       (write-capability-checkboxes '(admin poster moderator) object s)))
+	    (:td (:input :type "password" :name "password2")))
+       (:tr (:td ((:label :for "email") "Email (optional)"))
+	    (:td (:input :type "text" :name "email" :value (or (get-email object) "")))))
+      (when (has-capability* 'admin))
+       (write-capability-checkboxes *capabilities* object s))
      (:input :name "instance-id" :type "hidden" :value (get-id object))
      (:input :name "type" :type "hidden" :value (type-of object))
      (:input :name "edit" :type "hidden" :value "yes")
+     (when new
+       (htm (:input :name "new" :type "hidden" :value "yes")))
      (:input :type "reset" :name "reset" :value "Reset")
      (:input :type "submit" :name "submit" :value "Save")
-     (:input :type "submit" :name "display" :value "Finish")))
+     (:input :type "submit" :name "display" :value "Finish"))))
+
 
 (defun write-capability-checkboxes (capabilities user stream)
   (with-html-output (s stream :indent t)
@@ -125,7 +143,7 @@
 
 
 
-(defmethod html-form ((object (eql 'login-form)) output-stream)
+(defmethod html-form ((object (eql 'login-form)) output-stream &optional new)
   (with-html-output (s output-stream :indent t)
     (:hr :class "space")
     ((:form :method "post" :action "/login.html")
@@ -155,6 +173,11 @@
   (setf (published? obj)
 	(if (get-form-field 'published parameters) t nil)))
 
+(defmethod apply-changes ((obj tag) parameters)
+  (when-bind (n (get-form-field 'name parameters))
+	     (setf (get-tag-name obj) n))
+  (when-bind (r (get-form-field 'rubric parameters))
+	     (setf (get-rubric obj) r)))
 
 (defmethod apply-changes ((obj news) parameters)
   (when-bind (h (get-form-field 'headline parameters))
@@ -185,3 +208,31 @@
     (setf (get-motion obj) motion))
   (when-bind (rubric (get-form-field 'rubric parameters))
     (setf (get-rubric obj) rubric)))
+
+(defmethod apply-changes ((obj user) parameters)
+  (let ((messages '())
+	(info '()))
+    (when-bind (p (get-form-field 'password parameters))
+	       (when-bind (p2 (get-form-field 'password2 parameters))
+			  (if (string-equal p p2)
+			      (progn
+				(setf (get-password obj) p)
+				(push "Password changed" info))
+			      (push "Passwords do not match" messages))))
+    (when-bind (u (get-form-field 'username parameters))
+	       (if (get-form-field 'new parameters)
+		   (if (get-user-by-name u)
+		       (push "This username is already taken, please choose another." messages)
+		       (setf (get-username obj) u))
+		   (if-bind (ou (get-user-by-name u))
+			    (if (/= (instance-id u) (instance-id ou))
+				(push "This username is already taken, please choose another." messages))
+			    (setf (get-username obj) u))))
+    (when-bind (e (get-form-field 'email parameters))
+	       (setf (get-email obj) e))
+    (dolist (c *capabilities*)
+      (if (get-form-field c parameters)
+	  (add-capability obj c)
+	  (remove-capability obj c)))
+    (values obj messages info)))
+

@@ -15,11 +15,12 @@
   :serial t
   :version #.*reform-version*
   :depends-on (:elephant :split-sequence :toc-utils :hunchentoot :alexandria
-			 :cl-who :local-time :web-utils)
+			 :cl-who :local-time :web-utils :ht-ajax)
   :components ((:file "package")
 	       (:file "treat-file")
 	       (:file "store")
 	       (:file "reform")
+	       (:file "ajax")
 	       (:file "users")
 	       (:file "forms")
 	       (:file "display")))

@@ -1,11 +1,3 @@
- $(document).ready(function() {
-	 $(".rating").find("a").each(function(link) {
-		 link.click( function(e) {
-			 e.preventDefault();
-			 alert("You win!");
-     }
-		     );
-		     }
-	     );
-	     }
-     );
+function rate(numeric_id,rating) {
+    ajax_rate_comment_set_element("comment-" + numeric_id , numeric_id , rating);
+}
