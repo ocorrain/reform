@@ -102,12 +102,13 @@ FlashVars=\"userID=32971071&styleURL=http://static.twitter.com/flash/widgets/pro
 
 (defparameter *twitter-include* "
 
-<div id=\"twitter_div\">
+<div class=\"info\" id=\"twitter_div\">
 <h3 class=\"alt\">reformdotie@twitter</h2>
-<ul id=\"twitter_update_list\"></ul>
 <a href=\"http://twitter.com/reformdotie\" id=\"twitter-link\"
-style=\"display:block;text-align:right;\">follow reform.ie on Twitter</a>
+style=\"display:block;\">follow us</a>
 </div>
+<ul id=\"twitter_update_list\"></ul>
+
 <script type=\"text/javascript\"
 src=\"http://twitter.com/javascripts/blogger.js\"></script>
 <script type=\"text/javascript\"
@@ -205,19 +206,13 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 
 
 (defun get-top-tags ()
-  (let ((top-3 (get-top-n 'tag 3)))
-    (when top-3
+  (let ((top-2 (get-top-with-sticky 'tag 2)))
+    (when top-2
       (with-html-output-to-string (s nil :indent t)
-	((:div :class "span-7 colborder")
-	 (display (first top-3) (short-display) s))
-    
-	((:div :class "span-8 colborder")
-	 (display (second top-3) (short-display) s))
-    
-	((:div :class "span-7 last")
-	 (display (third top-3) (short-display) s))))))
-
-
+	((:div :class "span-11 colborder")
+	 (display (first top-2) (short-display) s))
+	((:div :class "span-12 last")
+	 (display (second top-2) (short-display) s))))))
 
 (hunchentoot:define-easy-handler (new-object :uri "/new.html")
     ((type :parameter-type #'get-valid-type))

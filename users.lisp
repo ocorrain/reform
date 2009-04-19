@@ -134,6 +134,8 @@
 
 (hunchentoot:define-easy-handler (edit-users :uri "/edit-users.html")
     ()
+  (unless (has-capability* 'admin)
+    (setf (hunchentoot:return-code*) hunchentoot:+http-forbidden+))
   (with-standard-page (:title "Edit users")
     ((:div :class "span-24 last")
      (:ul (dolist (u (ele:get-instances-by-class 'user))

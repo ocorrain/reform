@@ -64,7 +64,7 @@
   (multiple-value-bind (teaser more?)
       (get-teaser (html->text (get-story obj)) 300)
     (with-html-output (s stream :indent t)
-      ((:h3 :class "alt") "Article: " ((:a :href (get-url obj)) (str (get-headline obj))) )
+      ((:h3 :class "alt")  ((:a :href (get-url obj)) (str (get-headline obj))) )
       (:p (str teaser)
 	  (when more?
 	 (htm ((:a :href (get-url obj)) "(more)")))))))
@@ -79,8 +79,8 @@
 			   (get-id obj) (symbol-name (type-of obj))))
 	 "[ edit ]")))
       (:h1 (str (get-title obj)))
-      (:p (:i (fmt "&mdash;by ~A" (get-author obj))))
-      (str (get-story obj))))
+      (str (get-story obj))
+      (:p (:i (fmt "&mdash;~A" (get-author obj))))))
     ((:div :class "span-6 last")
      (:p (print-tag-links obj *standard-output*)))))
 
