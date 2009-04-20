@@ -78,7 +78,7 @@
 	(htm ((:a :href (format nil "/edit.html?instance-id=~A&type=~A"
 			   (get-id obj) (symbol-name (type-of obj))))
 	 "[ edit ]")))
-      (:h1 (str (get-title obj)))
+      ((:h2 :class "alt") (str (get-title obj)))
       (str (get-story obj))
       (:p (:i (fmt "&mdash;~A" (get-author obj))))))
     ((:div :class "span-6 last")
@@ -92,23 +92,29 @@
 
 (defmethod display ((obj debate) (type display-short) stream)
   (with-html-output (s stream :indent t)
-    ((:h3 :class "alt") "Debate: " ((:a :href (get-url obj)) (str (get-motion obj))) )
+    ((:h3 :class "alt")  ((:a :href (get-url obj)) (str (get-motion obj))) )
     (when-bind (rubric (get-rubric obj))
       (htm (:blockquote (str rubric))))))
 
 (defmethod display ((obj debate) (type display-full) stream)
   (with-standard-page (:title (get-title obj) :ajax t)
     ((:div :class "span-24")
-     (display obj (short-display) *standard-output*)
+     (unless (get-user)
+       (htm ((:h4 :class "alt") "Log in above to vote and enter comments")))
+     ((:h2 :class "alt")  ((:a :href (get-url obj)) (str (get-motion obj))))
      (print-tag-links obj *standard-output*)
-     (if (get-user)
-	 (comment-form obj *standard-output*)
-	 (htm ((:a :href "/login.html") "Log in to vote and enter comments")))
+     (when-bind (rubric (get-rubric obj))
+		(htm (:blockquote (:p (str rubric)))))
+
+     (when (get-user)
+       (comment-form obj *standard-output*))
+     
+     (:hr)
      (display-comments obj *standard-output*))))
 
 (defmethod display ((obj tag) (type display-short) stream)
   (with-html-output (s stream :indent t)
-    ((:h3 :class "alt") ((:a :href (get-url obj)) (str (get-tag-name obj))) )
+    ((:h2 :class "alt") ((:a :href (get-url obj)) (str (get-tag-name obj))) )
     (when-bind (rubric (get-rubric obj))
       (htm (:blockquote (str rubric))))))
 
@@ -126,7 +132,7 @@
   (with-standard-page (:title (get-title obj) :ajax t)
     ((:div :class "span-24")
      ((:div :class "display-article")
-      (:h1 (str (get-tag-name obj)) )
+      ((:h1 :class "alt") (str (get-tag-name obj)) )
       (when-bind (rubric (get-rubric obj))
 		 (htm (:blockquote (str rubric))))
       (let* ((objects (get-tagged-objects obj))

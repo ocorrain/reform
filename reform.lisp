@@ -140,11 +140,18 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 	((:div :class "span-7 last")
 	 (user-pane *standard-output*))
 	((:div :class "span-24 last")
-	 ((:p :class "menulink")
-	 ((:a :class "menulink" :href "/news.html") "News") " - "
-	 ((:a :class "menulink" :href "/articles.html") "Articles") " - "
-	 ((:a :class "menulink" :href "/debates.html") "Debates")))
+	 (str (print-menu))
+	 )
 	,@body)))))
+
+(defun print-menu ()
+  (with-html-output-to-string (s)
+    ((:p :class "menulink")
+     ((:a :class "menulink" :href "/policy.html") "policy") "  /  "
+     ((:a :class "menulink" :href "/articles.html") "articles") "  /  "
+     ((:a :class "menulink" :href "/news.html") "news") "  /  "
+     ((:a :class "menulink" :href "/debates.html") "debates"))))
+
 
 
 
@@ -171,7 +178,8 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
     (:hr)
      (:hr :class "space")
     ((:div :class "span-16 colborder")
-     (:blockquote (:p "The Republic guarantees religious and civil
+     ((:blockquote :style "font-size:14pt;font-family:serif;color:black;font-style:normal;")
+      (:p "The Republic guarantees religious and civil
 	liberty, equal rights and equal opportunities to all its
 	citizens, and declares its resolve to pursue the happiness and
 	prosperity of the whole nation and all of its parts,
@@ -192,6 +200,8 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 (defun get-debates ()
   (when-bind (top-2 (get-top-n 'debate 2))
 	     (with-html-output-to-string (s nil :indent t)
+	       ((:div :class "span-15 last")
+		((:h2 :class "alt") "Debates"))
 	       ((:div :class "span-7 colborder")
 		       (display (first top-2) (short-display) s))
 		      ((:div :class "span-7 last")
@@ -325,7 +335,7 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 	 (midpoint (ceiling (/ (length all-instances) 2))))
     (with-standard-page (:title title)
       ((:div :class "span-24 last")
-       (:h1 (str title)))
+       ((:h1 :class "alt") (str title)))
       (if all-instances
 	  (htm ((:div :class "span-11 colborder")
 		(dolist (a (subseq all-instances 0 midpoint))
@@ -349,3 +359,7 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 (hunchentoot:define-easy-handler (news-page :uri "/news.html")
     ()
   (class-page 'news "News"))
+
+(hunchentoot:define-easy-handler (policy-areas :uri "/policy.html")
+    ()
+  (class-page 'tag "Policy areas"))

@@ -73,15 +73,14 @@
     (when (try-to-log-user-in username password)
       (hunchentoot:redirect "/")))
   (with-standard-page (:title "Log in to reform.ie")
-    ((:div :class "span-12")
+    ((:div :class "span-11 colborder")
+     ((:h2 :class "alt") "Log in")
      ((:form :method "post" :enctype "multipart/form-data" :action "/login.html")
-      (:fieldset
-       (:legend "Log in")
-       (:table
+      (:table
 	(:tr (:td ((:label :for "username") "Username"))
 	     (:td (:input :type "text" :name "username")))
 	(:tr (:td ((:label :for "password") "Password"))
-	     (:td (:input :type "password" :name "password")))))
+	     (:td (:input :type "password" :name "password"))))
       (:input :type "submit" :name "submit" :value "log in")))
 
     ((:div :class "span-12 last")
@@ -89,10 +88,9 @@
 
 (defun registration-form ()
   (with-html-output-to-string (s)
+    ((:h2 :class "alt") "Register a new account")
     ((:form :method "post" :enctype "multipart/form-data" :action "/register.html")
-      (:fieldset
-       (:legend "Register")
-       (:table
+      (:table
 	(:tr (:td ((:label :for "username") "Username"))
 	     (:td (:input :type "text" :name "username")))
 	(:tr (:td ((:label :for "password") "Password"))
@@ -100,8 +98,9 @@
 	(:tr (:td ((:label :for "password2") "Please type your password again"))
 	     (:td (:input :type "password" :name "password2")))
 	(:tr (:td ((:label :for "email") "Email (optional)"))
-	     (:td (:input :type "text" :name "email")))))
+	     (:td (:input :type "text" :name "email"))))
      (:input :type "submit" :name "submit" :value "Register"))))
+
 
 (hunchentoot:define-easy-handler (register :uri "/register.html")
     (username password password2 email)
