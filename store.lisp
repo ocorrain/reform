@@ -47,6 +47,10 @@
   ((content-type :initarg :content-type :initform "text/html" :accessor get-content-type))
   (:metaclass ele:persistent-metaclass))
 
+(defclass person (news)
+  ()
+  (:metaclass ele:persistent-metaclass))
+
 (defclass debate (post)
   ((motion :initarg :motion :initform "" :accessor get-motion)
    (rubric :initarg :rubric :initform nil :accessor get-rubric)

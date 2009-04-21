@@ -1,4 +1,4 @@
-(in-package #:reform)
+ (in-package #:reform)
 
 (defclass display-short ()
   ())
@@ -69,6 +69,10 @@
 	  (when more?
 	 (htm ((:a :href (get-url obj)) "(more)")))))))
 
+(defmethod display ((obj person) (type display-short)  stream)
+  (with-html-output (s stream :indent t)
+    (str (get-headline obj))
+    (:i "&mdash; " (str (get-story obj)))))
 
 (defmethod display ((obj article) (type display-full) stream)
   (with-standard-page (:title (get-title obj) :ajax t)
@@ -118,34 +122,48 @@
     (when-bind (rubric (get-rubric obj))
       (htm (:blockquote (str rubric))))))
 
-(defmethod display ((obj article) (type display-full) stream)
-  (with-standard-page (:title (get-title obj) :ajax t)
-    ((:div :class "span-18")
-     ((:div :class "display-article")
-      (:h1 (str (get-title obj)))
-      (:p (:i (fmt "&mdash;by ~A" (get-author obj))))
-      (str (get-story obj))))
-    ((:div :class "span-6 last")
-     (:p (print-tag-links obj *standard-output*)))))
+
+(defun clean-objects (tag)
+  (setf (get-tagged-objects tag) (remove nil (get-tagged-objects tag))))
+
+(defun get-plural (symbol)
+  (cdr (assoc symbol '((article . "Articles")
+		       (debate . "Debates")
+		       (news . "News")))))
 
 (defmethod display ((obj tag) (type display-full) stream)
-  (with-standard-page (:title (get-title obj) :ajax t)
-    ((:div :class "span-24")
-     ((:div :class "display-article")
-      ((:h1 :class "alt") (str (get-tag-name obj)) )
-      (when-bind (rubric (get-rubric obj))
-		 (htm (:blockquote (str rubric))))
-      (let* ((objects (get-tagged-objects obj))
-	     (midpoint (ceiling (/ (length objects) 2))))
-	(when objects
-	  (htm ((:div :class "span-11 colborder")
-		(dolist (o (subseq objects 0 midpoint))
-		  (display o (short-display) *standard-output*)
-		  (htm (:hr))))
-	       ((:div :class "span-12 last")
-		(dolist (o (subseq objects midpoint))
-		  (display o (short-display) *standard-output*)
-		  (htm (:hr)))))))))))
+  (clean-objects obj)
+  (let ((current nil))
+    (flet ((print-nicely (o)
+	     (with-html-output-to-string (s)
+	       (when (not (equal current (type-of o)))
+		 (htm ((:h2 :class "alt")
+		       (str (get-plural (type-of o)))))
+		 (setf current (type-of o)))
+	       (display o (short-display) s))))
+      (with-standard-page (:title (get-title obj))
+	((:div :class "span-24")
+	 ((:div :class "display-article")
+	  ((:h1 :class "alt") (str (get-tag-name obj)) )
+	  (when-bind (rubric (get-rubric obj))
+		     (htm (:blockquote (str rubric))))
+	  (let* ((objects (sort (copy-list (get-tagged-objects obj))
+				#'string<
+				:key (lambda (tag) (symbol-name (type-of tag)))))
+		 (midpoint (ceiling (/ (length objects) 2))))
+	    (when objects
+	      (let ((current nil))
+		(htm ((:div :class "span-11 colborder")
+		      (dolist (o (subseq objects 0 midpoint))
+			(htm (str (print-nicely o))
+			     (:hr))))
+		     ((:div :class "span-12 last")
+		      (dolist (o (subseq objects midpoint))
+			(htm (str (print-nicely o))
+			     (:hr))))))))))))))
+
+
+
 
 (defmethod display-comment ((c comment) (user (eql 'no-user)) stream)
   (with-html-output (s stream :indent t)

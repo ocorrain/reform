@@ -7,7 +7,8 @@
 (defparameter *ajax-handler-url* "/ajax")
 
 (defparameter *nuggets* '("If not now, when?"
-			  "Reforming the Republic"))
+			  "Reforming the Republic"
+			  "Ireland&mdash;business as usual?"))
 
 (defun get-nugget ()
   (elt *nuggets* (random (length *nuggets*))))
@@ -118,6 +119,7 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 (defparameter *jquery-include* "
 
 ")
+
 (defmacro with-standard-page ((&key ajax (title "Welcome to Reform.ie")) &body body)
   `(with-html-output-to-string (*standard-output* nil :prologue t :indent t)
      (setf (hunchentoot:content-type*) "text/html; charset=utf-8")
@@ -126,22 +128,19 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
       (:head (:title (fmt "~A - reform.ie" ,title))
 	     (str *css-include*))
       (:body
-       (when (and ,ajax hunchentoot:*session*)
+       (when (and ,ajax (boundp 'hunchentoot:*session*) hunchentoot:*session*)
 	 (htm (:script :type "text/javascript" :src "/js/rate.js")
 	      (str (ht-ajax:generate-prologue *ajax-processor*))))
        
        ((:div :class "container")
 	((:div :class "span-17")
 	 (:hr)
-	 ((:h1 :class "alt") ((:a :href "/welcome.html") (:img :src "/images/reform.jpg")))
+	 ((:h1 :class "alt") ((:a :href "/welcome.html") (:img :src "/images/reform.jpg" :alt "reform.ie")))
 	 ((:h3 :class "alt") (str (get-nugget))))
-	
-	
 	((:div :class "span-7 last")
 	 (user-pane *standard-output*))
 	((:div :class "span-24 last")
-	 (str (print-menu))
-	 )
+	 (str (print-menu)))
 	,@body)))))
 
 (defun print-menu ()
@@ -150,7 +149,8 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
      ((:a :class "menulink" :href "/policy.html") "policy") "  /  "
      ((:a :class "menulink" :href "/articles.html") "articles") "  /  "
      ((:a :class "menulink" :href "/news.html") "news") "  /  "
-     ((:a :class "menulink" :href "/debates.html") "debates"))))
+     ((:a :class "menulink" :href "/debates.html") "debates") "  /  "
+     ((:a :class "menulink" :href "/about.html") "about"))))
 
 
 
@@ -178,7 +178,7 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
     (:hr)
      (:hr :class "space")
     ((:div :class "span-16 colborder")
-     ((:blockquote :style "font-size:14pt;font-family:serif;color:black;font-style:normal;")
+     ((:blockquote :style "font-size:14pt;font-family:serif;color:black;font-style:italic;")
       (:p "The Republic guarantees religious and civil
 	liberty, equal rights and equal opportunities to all its
 	citizens, and declares its resolve to pursue the happiness and
@@ -363,3 +363,35 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 (hunchentoot:define-easy-handler (policy-areas :uri "/policy.html")
     ()
   (class-page 'tag "Policy areas"))
+
+(hunchentoot:define-easy-handler (about-page :uri "/about.html")
+    ()
+  (let* ((all-instances (ele:get-instances-by-class 'person))
+	 (midpoint (ceiling (/ (length all-instances) 2))))
+    (with-standard-page (:title "about reform.ie")
+      ((:div :class "span-16 prepend-4 append-4")
+       ((:h1 :class "alt") (str "about reform.ie"))
+       ((:blockquote :style "font-size:12pt;font-family:sans-serif;color:black;font-style: normal;text-align:justify;") 
+	"reform.ie is a an internet-based political platform that
+       advocates the reform of local government in Ireland and the
+       continuing reform of the European Union with Ireland at its
+       core." (:br)
+	"We believe that these objectives are shared by a large
+proportion of the Irish electorate and we aim to provide a forum for debate to
+register this. " (:br)
+	"We hope to enlist the support of candidates who will pledge to
+sponsor the reforms so urgently required if elected." (:br) 
+
+	"We also hope to secure the commitment of candidates, both local and
+European, to propose &amp; deliver the reforms so urgently
+required if elected." (:br) 
+
+"reform.ie is not linked to any existing political party or movement
+in Ireland or elsewhere, nor are we funded by any political or
+economic entity." 
+ )
+       ((:h1 :class "alt") "Contact details")
+       ((:blockquote :style "font-size:12pt;font-family:sans-serif;color:black;font-style: normal;text-align:justify;")
+	(dolist (p (ele:get-instances-by-class 'person))
+	      (display p (short-display) *standard-output*) (htm (:br) (:br))))))))
+

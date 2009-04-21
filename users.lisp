@@ -23,7 +23,7 @@
 	(member capability capabilities))))
 
 (defun has-capability* (capability)
-  (and hunchentoot:*session*
+  (and (boundp 'hunchentoot:*session*) hunchentoot:*session*
        (hunchentoot:session-value 'user)
        (has-capability? (hunchentoot:session-value 'user) capability)))
 
@@ -62,7 +62,7 @@
 					      (with-html-output-to-string (s)
 					       ((:a :href (url-rewrite:add-get-param-to-url "/new.html" "type" type))
 						(str type))))
-					    (list "article" "news" "debate" "tag")))) )))
+					    (list "article" "news" "debate" "tag" "person")))) )))
 	   (with-html-output (s stream)
 	     ((:a :href "/login.html") "log in or register"))))
 
