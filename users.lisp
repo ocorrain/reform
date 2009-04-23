@@ -49,22 +49,22 @@
 	   (setf (hunchentoot:return-code*) hunchentoot:+http-forbidden+)))
 
 (defun user-pane (stream)
-  (if-bind (user (hunchentoot:session-value 'user))
-	   (with-html-output (s stream)
-	     (:p (fmt "~A | " (get-username user))
-		 ((:a :href "/logout.html") "log out")
-		  (if (has-capability* 'admin)
-		      (htm " | " ((:a :href "/new.html?type=user") "new user")
-			   " | " ((:a :href "/edit-users.html") "edit users")))
-		  (if (has-capability* 'poster)
-		      (htm (:br) (fmt "Post new ~{~A~^, ~}."
-				    (mapcar (lambda (type)
-					      (with-html-output-to-string (s)
-					       ((:a :href (url-rewrite:add-get-param-to-url "/new.html" "type" type))
-						(str type))))
-					    (list "article" "news" "debate" "tag" "person")))) )))
-	   (with-html-output (s stream)
-	     ((:a :href "/login.html") "log in or register"))))
+  (format stream "~A" (print-menu))
+  (when-bind (user (hunchentoot:session-value 'user))
+	     (with-html-output (s stream)
+	       (:p (fmt "~A | " (get-username user))
+		   ((:a :href "/logout.html") "log out")
+		   (if (has-capability* 'admin)
+		       (htm " | " ((:a :href "/new.html?type=user") "new user")
+			    " | " ((:a :href "/edit-users.html") "edit users")))
+		   (if (has-capability* 'poster)
+		       (htm (:br) (fmt "Post new ~{~A~^, ~}."
+				       (mapcar (lambda (type)
+						 (with-html-output-to-string (s)
+						   ((:a :href (url-rewrite:add-get-param-to-url "/new.html" "type" type))
+						    (str type))))
+					       (list "article" "news" "debate" "tag" "person")))) )))))
+
 
 (hunchentoot:define-easy-handler (login-page :uri "/login.html"
 					     :default-request-type :post)

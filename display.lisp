@@ -1,4 +1,4 @@
- (in-package #:reform)
+(in-package #:reform)
 
 (defclass display-short ()
   ())
@@ -65,9 +65,17 @@
       (get-teaser (html->text (get-story obj)) 300)
     (with-html-output (s stream :indent t)
       ((:h3 :class "alt")  ((:a :href (get-url obj)) (str (get-headline obj))) )
+      
       (:p (str teaser)
 	  (when more?
-	 (htm ((:a :href (get-url obj)) "(more)")))))))
+	 (htm ((:a :href (get-url obj)) "(more)"))))
+      ((:p :class "incr") (fmt "Posted ~A in ~{~A~^, ~}."
+			       (timestring (get-posted obj))
+			       (mapcar (lambda (tag)
+					 (with-html-output-to-string (s)
+					   ((:a :href (get-url (get-tag-by-name tag)))
+					    (str tag))))
+				       (get-tags obj)))))))
 
 (defmethod display ((obj person) (type display-short)  stream)
   (with-html-output (s stream :indent t)
@@ -83,6 +91,8 @@
 			   (get-id obj) (symbol-name (type-of obj))))
 	 "[ edit ]")))
       ((:h2 :class "alt") (str (get-title obj)))
+      ((:p :class "incr") (:b (fmt "Posted ~A" (timestring (get-posted obj)))))
+      (:hr :class "space")
       (str (get-story obj))
       (:p (:i (fmt "&mdash;~A" (get-author obj))))))
     ((:div :class "span-6 last")
@@ -104,7 +114,7 @@
   (with-standard-page (:title (get-title obj) :ajax t)
     ((:div :class "span-24")
      (unless (get-user)
-       (htm ((:h4 :class "alt") "Log in above to vote and enter comments")))
+       (htm ((:h4 :class "alt") ((:a :href "/login.html") "Log in ") " to vote and comment")))
      ((:h2 :class "alt")  ((:a :href (get-url obj)) (str (get-motion obj))))
      (print-tag-links obj *standard-output*)
      (when-bind (rubric (get-rubric obj))
@@ -152,15 +162,15 @@
 				:key (lambda (tag) (symbol-name (type-of tag)))))
 		 (midpoint (ceiling (/ (length objects) 2))))
 	    (when objects
-	      (let ((current nil))
-		(htm ((:div :class "span-11 colborder")
+	      (setf current 'article)
+	      (htm ((:div :class "span-11 colborder")
 		      (dolist (o (subseq objects 0 midpoint))
 			(htm (str (print-nicely o))
 			     (:hr))))
 		     ((:div :class "span-12 last")
 		      (dolist (o (subseq objects midpoint))
 			(htm (str (print-nicely o))
-			     (:hr))))))))))))))
+			     (:hr)))))))))))))
 
 
 

@@ -24,4 +24,5 @@
 	       (:file "users")
 	       (:file "forms")
 	       (:file "display")
-	       (:file "tags")))
+	       (:file "tags")
+	       (:file "rss")))

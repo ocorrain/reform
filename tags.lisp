@@ -36,14 +36,16 @@
 (defmethod print-tag-links ((obj tagged-object-mixin) stream)
   (if (get-tags obj)
       (with-html-output (s stream)
-	(:p (fmt "Tags: ~{~A~^, ~}" (mapcar (lambda (tag-name)
-					      (with-html-output-to-string (strstr)
-						((:a :href (format nil "/display.html?type=tag&id=~A"
-								   (get-id (get-tag-by-name tag-name))))
-						 (str tag-name))))
-					    (get-tags obj)))))
+	((:h3 :class "alt") "Tags")
+	(:ul (dolist (tag-name (get-tags obj))
+	       (htm (:li ((:a :href (format nil "/display.html?type=tag&id=~A"
+				       (get-id (get-tag-by-name tag-name))))
+		     (str tag-name)))))))
       ""))
 
+(defun get-tagged-of-type (tag type)
+  (remove-if-not (lambda (obj) (equal type (type-of obj)))
+		 (get-tagged-objects tag)))
 
 
 (ht-ajax:defun-ajax toggle-tag (tag-name type instance-id) (*ajax-processor* :method :post)
