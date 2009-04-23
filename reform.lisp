@@ -185,7 +185,7 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 	citizens, and declares its resolve to pursue the happiness and
 	prosperity of the whole nation and all of its parts,
 	cherishing all of the children of the nation equally" ))
-     ((:p :align "right") "&mdash;Proclamation of Independence")
+     ((:p :align "right") "&mdash;Proclamation of Irish independence, Easter Monday 1916")
      (:hr)
      (str (get-debates)))
     ((:div :class "span-7 last")

@@ -54,7 +54,7 @@
   (multiple-value-bind (teaser more?)
       (get-teaser (html->text (get-story obj)))
     (with-html-output (s stream :indent t)
-      ((:p :class "incr")
+      (:p
        (:em (str (get-headline obj)))
        " " (str teaser)
        (when more?
@@ -82,7 +82,7 @@
     (str (get-headline obj))
     (:i "&mdash; " (str (get-story obj)))))
 
-(defmethod display ((obj article) (type display-full) stream)
+(defmethod display ((obj news) (type display-full) stream)
   (with-standard-page (:title (get-title obj) :ajax t)
     ((:div :class "span-18")
      ((:div :class "display-article")
@@ -94,7 +94,8 @@
       ((:p :class "incr") (:b (fmt "Posted ~A" (timestring (get-posted obj)))))
       (:hr :class "space")
       (str (get-story obj))
-      (:p (:i (fmt "&mdash;~A" (get-author obj))))))
+      (when-bind (author (get-author obj))
+		 (htm (:p (:i (fmt "&mdash;~A" (get-author obj))))))))
     ((:div :class "span-6 last")
      (:p (print-tag-links obj *standard-output*)))))
 
@@ -236,12 +237,13 @@
       (htm ((:h6 :class "alt") (fmt "Posted at ~a:~2,'0d ~a/~a/~a" hour minute date month year))))
     (:p (str (get-comment obj)))))
 
-(defmethod display ((obj news) (type display-full) stream)
-  (with-html-output (s stream :indent t)
-    (:h2 (str (get-headline obj)))
-    (:h5 (str (get-author obj)))
-    (print-tag-links obj s)
-    (str (get-story obj))))
+;; (defmethod display ((obj news) (type display-full) stream)
+;;   (with-html-output (s stream :indent t)
+;;     (with-standard-pa)
+;;     (:h2 (str (get-headline obj)))
+;;     (:h5 (str (get-author obj)))
+;;     (print-tag-links obj s)
+;;     (str (get-story obj))))
 
 (defmethod get-title ((obj news))
   (get-headline obj))
