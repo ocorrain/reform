@@ -1,0 +1,10 @@
+* Add comments to articles
+** threaded
+** report facility
+** delete facility
+
+* PM/notification system
+
+* Markdown for comments and articles (cl-markdown)
+
+* Twitter for new articles/debates (cl-twitter)
