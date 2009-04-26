@@ -96,8 +96,6 @@
       ((:p :class "incr") ((:a :href (format nil "~A#comments" (get-url obj)))
 			   (:b (fmt "~A comment~:P. " (get-total-comments obj)))) 
        (fmt "Posted ~A." (timestring (get-posted obj))))
-
-;; ((:p :class "incr") (:b (fmt "Posted ~A" (timestring (get-posted obj)))))
       (:hr :class "space")
       (str (get-story obj))
       (when-bind (author (get-author obj))
@@ -105,6 +103,7 @@
     ((:div :class "span-6 last")
      (:p (str (print-tag-links obj))))
     (:hr)
+    ((:a :name "comments") "")
     (if (get-user)
 	(htm ((:div :class "span-24")
 	      (str (comment-form obj))))
