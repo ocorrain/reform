@@ -280,7 +280,7 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 	((:a :href (format nil"/delete.html?instance-id=~A&type=~A"
 			   (get-id obj) (symbol-name (type-of obj))))
 	 (:img :src "/images/delete.png"))
-	(str (html-form obj))
+	(html-form obj *standard-output*)
 	(when (typep obj 'tagged-object-mixin)
 	  (htm ((:hr) ((:p :id "tag-cloud")
 		       (print-tags-for-editing obj))))))

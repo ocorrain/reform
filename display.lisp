@@ -21,7 +21,7 @@
 
 
 (defmethod get-url ((obj reform-base-class))
-  (format nil "/display.html?type=~A&amp;id=~A"
+  (format nil "/display.html?type=~A&id=~A"
 	  (string-downcase (symbol-name (type-of obj)))
 	  (get-id obj)))
 
@@ -106,11 +106,14 @@
     ((:a :name "comments") "")
     (if (get-user)
 	(htm ((:div :class "span-24")
+	      ((:h3 :class "alt") "Comments")
 	      (str (comment-form obj))))
-	(htm ((:h4 :class "alt") ((:a :href "/login.html") "Log in ") " to vote and comment")))
+	(htm ((:h4 :class "alt") (str (get-login-link obj)) " to vote and comment")))
     (when-bind (comments (get-comments obj))
 	       (str (print-comments comments 0)))))
 
+(defun get-login-link (obj)
+  (html ((:a :href (format nil "/login.html?rtype=~A&rnumber=~A" (type-of obj) (get-id obj))) "Log in ")))
 
 
 (defmethod display ((obj news) (type display-full))
