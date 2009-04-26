@@ -5,3 +5,8 @@ function rate(numeric_id,rating) {
 function toggle(name,type,id) {
     ajax_toggle_tag_set_element("tag-cloud",name,type,id);
 }
+
+function toggle_visible(obj) {
+	var el = document.getElementById(obj);
+	el.style.display = (el.style.display != 'none' ? 'none' : '' );
+}

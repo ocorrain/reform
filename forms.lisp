@@ -62,8 +62,10 @@
 ;; 		       (:input :type "radio" :name "in-favour" :value "against") "Against" 
 ;; 		       ((:button :type "submit") "comment"))))
 
-(defun comment-form (debate output-stream)
-  (with-html-output (s output-stream :indent t)
+(defgeneric comment-form (obj))
+
+(defmethod comment-form ((debate debate))
+  (with-html-output-to-string (s)
     ((:form :method "post" :action "/post-comment.html")
      (:textarea :style "width: 500px; height: 75px"
 		:name "comment" :rows 5 :cols 20) (:br)
@@ -71,6 +73,14 @@
      ((:button :type "submit" :name "vote":value "against") "vote against")
      (:input :type "hidden" :name "debate" :value (get-id debate)))))
 
+(defmethod comment-form ((obj news))
+  (with-html-output-to-string (s)
+    ((:form :method "post" :action "/post-to-thread.html")
+     (:textarea :style "width: 500px; height: 75px"
+		:name "comment" :rows 5) (:br)
+     ((:button :type "submit" :name "comment") "comment")
+     (:input :type "hidden" :name "reply-to" :value (get-id obj))
+     (:input :type "hidden" :name "type" :value (type-of obj)))))
 
 
 (defmethod html-form ((object article) output-stream &optional new)

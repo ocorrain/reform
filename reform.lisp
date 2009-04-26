@@ -1,5 +1,10 @@
 (in-package #:reform)
 
+(defmacro html (&body body)
+  (let ((g (gensym "html-output")))
+    `(with-html-output-to-string (,g)
+       ,@body)))
+
 (defparameter *reform-site* (load-time-value
 			     (or #.*compile-file-pathname* *load-pathname*)))
 
@@ -44,6 +49,9 @@
 	      (hunchentoot:create-prefix-dispatcher
 	       *ajax-handler-url*
 	       (ht-ajax:get-handler *ajax-processor*))
+	      (hunchentoot:create-static-file-dispatcher-and-handler
+	       "/css/reform.css" (merge-pathnames (pathname "css/reform.css")
+						  (make-pathname :directory (pathname-directory *reform-site*))))
 	      (hunchentoot:create-folder-dispatcher-and-handler
 	       "/css/" (pathname (get-config-option :css-dir)))
 	      (hunchentoot:create-folder-dispatcher-and-handler
@@ -150,8 +158,8 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
      ((:a :class "menulink" :href "/articles.html") "articles") "  /  "
      ;; ((:a :class "menulink" :href "/news.html") "news") "  /  "
      ;; ((:a :class "menulink" :href "/debates.html") "debates") "  /  "
-     ((:a :class "menulink" :href "/login.html") "discuss") "  /  "
-     ((:a :class "menulink" :href "/about.html") "about"))))
+     ((:a :class "menulink" :href "/login.html") "login or register") "  /  "
+     ((:a :class "menulink" :href "/about.html") "about us"))))
 
 
 
@@ -192,7 +200,7 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
      (when-bind (news (get-news))
      		(htm
      		 (:h3 "News")
-     		 (str (get-news))))
+     		 (str news)))
      (str *twitter-include*)
      ;(str *twitter-flash-include*)
  
@@ -204,26 +212,26 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 	       ((:div :class "span-15 last")
 		((:h2 :class "alt") "Debates"))
 	       ((:div :class "span-7 colborder")
-		       (display (first top-2) (short-display) s))
-		      ((:div :class "span-7 last")
-		       (display (second top-2) (short-display) s)))))
+		(str (display (first top-2) (short-display))))
+	       ((:div :class "span-7 last")
+		(str (display (second top-2) (short-display)))))))
 
 
 (defun get-news ()
   (when-bind (top-news (get-top-n 'news 5))
 	     (with-html-output-to-string (s nil :indent t)
 	       (dolist (news-item top-news)
-		 (display news-item (short-display) s)))))
+		 (display news-item (short-display))))))
 
 
 (defun get-top-tags ()
   (let ((top-2 (get-top-with-sticky 'tag 2)))
     (when top-2
-      (with-html-output-to-string (s nil :indent t)
+      (with-html-output-to-string (s)
 	((:div :class "span-11 colborder")
-	 (display (get-tag-by-name "Local government") (short-display) s))
+	 (htm (str (display (get-tag-by-name "Local government") (short-display)))))
 	((:div :class "span-12 last")
-	 (display (get-tag-by-name "European Union") (short-display) s))))))
+	 (htm (str (display (get-tag-by-name "European Union") (short-display)))))))))
 
 (hunchentoot:define-easy-handler (new-object :uri "/new.html")
     ((type :parameter-type #'get-valid-type))
@@ -272,10 +280,10 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 	((:a :href (format nil"/delete.html?instance-id=~A&type=~A"
 			   (get-id obj) (symbol-name (type-of obj))))
 	 (:img :src "/images/delete.png"))
-	(html-form obj *standard-output*)
+	(str (html-form obj))
 	(when (typep obj 'tagged-object-mixin)
 	  (htm ((:hr) ((:p :id "tag-cloud")
-		       (print-tags-for-editing obj *standard-output*))))))
+		       (print-tags-for-editing obj))))))
        ((:div :class "span-8 last")
 	(when messages
 	  (htm ((:div :class "error")
@@ -286,7 +294,7 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 		(:ul (dolist (m infos)
 		       (htm (:li (str m))))))))
 	(:h2 "Preview")
-	(display obj (short-display) *standard-output*))))
+	(str (display obj (short-display))))))
    (error "Object not found")))
 
   
@@ -322,8 +330,8 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 	  (if (equal vote "for")
 	      (push comment-obj (get-comments-for obj))
 	      (push comment-obj (get-comments-against obj)))))))
-  (hunchentoot:redirect (hunchentoot:referer))
-  )
+  (hunchentoot:redirect (hunchentoot:referer)))
+
 
 (hunchentoot:define-easy-handler (rate :uri "/rate")
     ()
@@ -343,12 +351,12 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
       (if instances
 	  (htm ((:div :class "span-11 colborder")
 		(dolist (a (subseq instances 0 midpoint))
-		  (display a (short-display) *standard-output*)
-		  (htm (:hr))))
+		  (htm (str (display a (short-display)))
+		       (:hr))))
 	       ((:div :class "span-12 last")
 		(dolist (a (subseq instances midpoint))
-		  (display a (short-display) *standard-output*)
-		  (htm (:hr)))))
+		  (htm (str (display a (short-display)))
+		       (:hr)))))
 	  (htm ((:div :class "span-24 last") "No news"))))))
 
 
@@ -406,5 +414,6 @@ economic entity."
 	(str "General contact &mdash; ") ((:a :href "mailto:info@reform.ie") (:i "info@reform.ie"))
 	(:br) (:br)
 	(dolist (p (ele:get-instances-by-class 'person))
-	      (display p (short-display) *standard-output*) (htm (:br) (:br))))))))
+	  (htm (str (display p (short-display)))
+	       (:br) (:br))))))))
 

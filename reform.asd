@@ -25,4 +25,5 @@
 	       (:file "forms")
 	       (:file "display")
 	       (:file "tags")
-	       (:file "rss")))
+	       (:file "rss")
+	       (:file "comments")))

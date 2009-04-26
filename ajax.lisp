@@ -7,7 +7,8 @@
 		    (let* ((user (get-user))
 			   (comment-id (parse-integer comment :junk-allowed t))
 			   (vote-numeric (parse-integer vote :junk-allowed t))
-			   (c (ele:get-instance-by-value 'comment 'instance-id comment-id)))
+			   (c (or (ele:get-instance-by-value 'comment 'instance-id comment-id)
+				   (ele:get-instance-by-value 'threaded-comment 'instance-id comment-id))))
 		      (when (and user c)
 			(print-rating c (vote c user vote-numeric)))))
 
@@ -46,7 +47,7 @@
 	(passive "cursor: pointer;text-decoration: none;")
 	(comment-id-string (format nil "comment-~A" (get-id comment))))
     (with-html-output-to-string (s)
-      ((:p :id comment-id-string :style "text-align: center;font-size: 16pt;color: #c4b6b6;")
+      ((:p :id comment-id-string :style "text-align: center;font-size: 14pt;color: #c4b6b6;")
        ((:a :class "rating"
 	    :style (case rating (positive active) (otherwise passive))
 	    :onclick (format nil "javascript:rate(~A,1)"  (get-id comment))) "+")

@@ -44,7 +44,9 @@
   (:metaclass ele:persistent-metaclass))
 
 (defclass article (news)
-  ((content-type :initarg :content-type :initform "text/html" :accessor get-content-type))
+  ((content-type :initarg :content-type :initform "text/html" :accessor get-content-type)
+   (comments :initarg :comments :initform nil :accessor get-comments)
+   (total-comments :initarg :total :initform 0 :accessor get-total-comments))
   (:metaclass ele:persistent-metaclass))
 
 (defclass person (news)
@@ -64,3 +66,13 @@
    (votes :initarg :votes :initform 0 :accessor get-votes)
    (debate :initarg :debate :initform nil :accessor get-debate))
   (:metaclass ele:persistent-metaclass))
+
+(defclass threaded-comment (comment)
+  ((parent :initarg :parent :initform nil :accessor get-parent)
+   (children :initarg :children :initform nil :accessor get-children))
+  (:metaclass ele:persistent-metaclass))
+
+(defclass deleted-comment (threaded-comment)
+  ()
+  (:metaclass ele:persistent-metaclass))
+

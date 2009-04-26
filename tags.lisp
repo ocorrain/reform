@@ -14,7 +14,7 @@
       (progn (push (get-tag-name tag) (get-tags object))
 	     (push object (get-tagged-objects tag)))))
 
-(defmethod print-tags-for-editing ((obj tagged-object-mixin) stream)
+(defmethod print-tags-for-editing ((obj tagged-object-mixin))
   (let ((all-tags (sort (copy-list (ele:get-instances-by-class 'tag))
 			#'string< :key #'get-tag-name)))
     (let ((tag-links
@@ -31,17 +31,19 @@
 			     (htm ((:a :href "#" :onclick js-link :style "text-decoration: none; color:black;")
 				   (str tag-name)))))))
 		   all-tags)))
-      (format stream "Tags: ~{~A~^, ~}" tag-links))))
+      (format nil "Tags: ~{~A~^, ~}" tag-links))))
 
-(defmethod print-tag-links ((obj tagged-object-mixin) stream)
+(defmethod print-tag-links ((obj tagged-object-mixin))
   (if (get-tags obj)
-      (with-html-output (s stream)
+      (with-html-output-to-string (s)
 	((:h3 :class "alt") "Tags")
 	(:ul (dolist (tag-name (get-tags obj))
 	       (htm (:li ((:a :href (format nil "/display.html?type=tag&id=~A"
 				       (get-id (get-tag-by-name tag-name))))
 		     (str tag-name)))))))
       ""))
+
+(defgeneric print-tag-links (obj))
 
 (defun get-tagged-of-type (tag type)
   (remove-if-not (lambda (obj) (equal type (type-of obj)))
