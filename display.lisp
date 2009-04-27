@@ -152,18 +152,17 @@
 
 (defmethod display ((obj debate) (type display-full))
   (with-standard-page (:title (get-title obj) :ajax t)
-    ((:div :class "span-24")
+    ((:div :class "span-24 last")
      (unless (get-user)
        (htm ((:h4 :class "alt") ((:a :href "/login.html") "Log in ") " to vote and comment")))
      ((:h2 :class "alt")  ((:a :href (get-url obj)) (str (get-motion obj))))
      (str (print-tag-links obj))
      (when-bind (rubric (get-rubric obj))
 		(htm (:blockquote (:p (str rubric)))))
-
      (when (get-user)
-       (htm (str  (comment-form obj))))
+       (htm (str  (comment-form obj)))))
      (:hr)
-     (str (display-comments obj)))))
+     (str (display-comments obj))))
 
 (defmethod display ((obj tag) (type display-short))
   (with-html-output-to-string (s)
@@ -260,11 +259,12 @@
        (:script :type "text/javascript" :src "/js/rate.js")
        ((:h2 :class "alt") "For")
        (dolist (c (sort-comments (remove nil (get-comments-for debate))))
-	 (htm (str (display-comment c display-context))))
-      ((:div :class "span-12 last")
+	 (htm (str (display-comment c display-context)))))
+      ((:div :class "span-11 last")
        ((:h2 :class "alt") "Against")
        (dolist (c (sort-comments (remove nil (get-comments-against debate))))
-	 (htm (str (display-comment c display-context)))))))))
+	 (htm (str (display-comment c display-context))))))))
+
 
 
 (defmethod display ((obj comment) (type display-short))

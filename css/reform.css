@@ -9,7 +9,7 @@ a.menulink:link, a.menulink:visited, a.menulink:active { color: #e80a09;
 a.menulink:hover { text-decoration: underline; }
 
 p.menulink { font-size: 14pt;
-	     text-align: center;
+	     text-align: right;
 }
 
 .display-article {

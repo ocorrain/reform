@@ -151,6 +151,7 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 	;;  (str (print-menu)))
 	,@body)))))
 ;(str (print-menu))
+
 (defun print-menu ()
   (with-html-output-to-string (s)
     ((:p :class "menulink")
@@ -158,7 +159,8 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
      ((:a :class "menulink" :href "/articles.html") "articles") "  /  "
      ;; ((:a :class "menulink" :href "/news.html") "news") "  /  "
      ;; ((:a :class "menulink" :href "/debates.html") "debates") "  /  "
-     ((:a :class "menulink" :href "/login.html") "login or register") "  /  "
+     (unless (get-user)
+       (htm ((:a :class "menulink" :href "/login.html") "login or register") "  /  "))
      ((:a :class "menulink" :href "/about.html") "about us"))))
 
 
@@ -219,9 +221,8 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 
 (defun get-news ()
   (when-bind (top-news (get-top-n 'news 5))
-	     (with-html-output-to-string (s nil :indent t)
-	       (dolist (news-item top-news)
-		 (display news-item (short-display))))))
+	     (html (dolist (news-item top-news)
+		     (str (display news-item (short-display)))))))
 
 
 (defun get-top-tags ()
@@ -283,7 +284,7 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 	(html-form obj *standard-output*)
 	(when (typep obj 'tagged-object-mixin)
 	  (htm ((:hr) ((:p :id "tag-cloud")
-		       (print-tags-for-editing obj))))))
+		       (str (print-tags-for-editing obj)))))))
        ((:div :class "span-8 last")
 	(when messages
 	  (htm ((:div :class "error")

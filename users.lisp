@@ -58,16 +58,17 @@
   (format stream "~A" (print-menu))
   (when-bind (user (hunchentoot:session-value 'user))
 	     (with-html-output (s stream)
-	       (:p (fmt "~A | " (get-username user))
-		   ((:a :href "/logout.html") "log out")
-		   (if (has-capability* 'admin)
-		       (htm " | " ((:a :href "/new.html?type=user") "new user")
-			    " | " ((:a :href "/edit-users.html") "edit users")))
-		   (if (has-capability* 'poster)
-		       (htm (:br) (fmt "Post new ~{~A~^, ~}."
-				       (mapcar (lambda (type)
-						 (with-html-output-to-string (s)
-						   ((:a :href (url-rewrite:add-get-param-to-url "/new.html" "type" type))
+	       ((:p :align "right" :style "font-size:120%")
+		"logged in as " (:b (str (get-username user))) " | " 
+		((:a :href "/logout.html") "log out")
+		(if (has-capability* 'admin)
+		    (htm (:br) ((:a :href "/new.html?type=user") "new user")
+			 " | " ((:a :href "/edit-users.html") "edit users")))
+		(if (has-capability* 'poster)
+		    (htm (:br) (fmt "Post new ~{~A~^, ~}."
+				    (mapcar (lambda (type)
+					      (with-html-output-to-string (s)
+						((:a :href (url-rewrite:add-get-param-to-url "/new.html" "type" type))
 						    (str type))))
 					       (list "article" "news" "debate" "tag" "person")))) )))))
 
@@ -107,6 +108,9 @@
 	    (:td (:input :type "password" :name "password2")))
        (:tr (:td ((:label :for "email") "Email (optional)"))
 	    (:td (:input :type "text" :name "email"))))
+      (when (and rnumber rtype)
+	(htm (:input :type "hidden" :name "rnumber" :value rnumber)
+	     (:input :type "hidden" :name "rtype" :value rtype)))
       (:input :type "submit" :name "submit" :value "Register")))))
 
 (defun registration-form ()
@@ -125,7 +129,7 @@
 
 
 (hunchentoot:define-easy-handler (register :uri "/register.html")
-    (username password password2 email)
+    (username password password2 email (rnumber :parameter-type 'integer) rtype)
   (let ((messages '()))
     (when (and username password password2)
       (if (get-user-by-name username)
@@ -134,6 +138,9 @@
 	      (let ((user (make-instance 'user :username username :password password)))
 		(when email (setf (get-email user) email))
 		(try-to-log-user-in username password)
+		(when (and (get-valid-type rtype) rnumber)
+		  (when-bind (obj (ele:get-instance-by-value (get-valid-type rtype) 'instance-id rnumber))
+			     (hunchentoot:redirect (get-url obj))))
 		(hunchentoot:redirect "/"))
 	      (push "Passwords do not match" messages))))
     (with-standard-page (:title "Register")
