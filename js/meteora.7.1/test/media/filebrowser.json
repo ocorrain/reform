@@ -1,0 +1,36 @@
+{
+  path: '../media/',
+  files: [
+    {
+      name: 'image.jpg',
+      size: 223,
+      perms': { 
+        r: true,
+        w: true,
+        x: true
+      },
+      type: {
+        dir: true,
+        file: false,
+        link: false
+      },
+      icon: 'XXX'
+    },
+    {
+      'name': 'lorem_ipsum.html',
+      'size': '1223'
+    },
+    {
+      'name': 'image.jpg',
+      'size': '223'
+    },
+    {
+      'name': 'lorem_ipsum.html',
+      'size': '1223'
+    }
+  ],
+  'directories': [
+    { 'name': 'toolbar' },
+    { 'name': '.svn' }
+  ]
+}

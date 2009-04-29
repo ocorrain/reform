@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Meteora.Editor</title>
+
+    <!-- Meteora -->
+    <script src="../../src/meteora.js" type="text/javascript"></script>
+    <!-- Meteora -->
+
+    <link type="text/css" rel="stylesheet" href="../css/test.css" />
+  </head>
+  <body>
+  
+    <h1>Meteora.Editor</h1>
+
+    <div class="instructions">
+      Edit the document with the controls in the upper part of the editor.
+    </div>
+
+    <form method="post" action="http://meteora.astrata.com.mx/mirror.php">
+
+      <textarea id="editor-1" name="content" style="width: 500px; height: 200px;"><h2>Hello there!</h2>
+<p>
+  This is a <a href="http://en.wikipedia.org/wiki/WYSIWYG">WYSIWYG</a> editor.<br />
+</p>
+<img src="http://www.ilvem.com.ar/img/test01.jpg" width="365" height="311" />
+<p>
+  Lorem <span style="background-color: red">ipsum</span>
+  dolor sit amet, <b>consectetur adipisici elit</b>,
+  sed <b>eiusmod <i>tempor</i></b> incidunt ut labore et dolore magna aliqua.
+  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+  laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure
+  reprehenderit in voluptate velit esse cillum dolore eu fugiat
+  nulla pariatur. Excepteur sint obcaecat cupiditat non proident,
+  sunt in culpa qui officia deserunt mollit anim id est laborum.<br />
+</p>
+<p style="text-align: center">
+  <img width="300" height="398" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Phalacrocorax_aristotelis_desmarestii.jpg/300px-Phalacrocorax_aristotelis_desmarestii.jpg" />
+</p>
+<p>
+  Lorem ipsum dolor sit amet, <b>consectetur adipisici elit</b>,
+  sed <b>eiusmod <i>tempor</i></b> incidunt ut labore et dolore magna aliqua.
+  Ut enim ad minim veniam, quis nostrud exercitation ullamco
+  laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure
+  reprehenderit in voluptate velit esse cillum dolore eu fugiat
+  nulla pariatur. Excepteur sint obcaecat cupiditat non proident,
+  sunt in culpa qui officia deserunt mollit anim id est laborum.<br />
+</p>
+      </textarea>
+      
+      <button type="submit">submit</button>
+
+    </form>
+
+    <script type="text/javascript">
+
+      Meteora.uses('Meteora.Editor');
+
+      Meteora.showDebug(true);
+      
+      Meteora.onStart(
+        function() {
+          new Editor(
+            'editor-1', {
+              tabIndents: false
+            }
+          );
+        }
+      );
+
+    </script>
+
+  </body>
+</html>

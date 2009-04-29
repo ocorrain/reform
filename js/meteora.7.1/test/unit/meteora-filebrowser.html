@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Meteora.Filebrowser</title>
+
+    <!-- meteora -->
+    <script src="../../src/meteora.js" type="text/javascript"></script>
+    <!-- meteora -->
+
+    <link type="text/css" rel="stylesheet" href="../css/test.css" />
+  </head>
+  <body>
+
+    <h1>Meteora.Filebrowser</h1>
+
+    <div class="instructions">
+      The blue colored files represent directories and the black colored are normal files.
+      This control depends on a <b>server-side</b> script that lists
+      files and their properties to output them in JSON format.
+    </div>
+
+    <div id="filebrowser-demo" style="width: 500px"></div>
+
+    <script type="text/javascript">
+      Meteora.uses('Meteora.Filebrowser');
+      
+      Meteora.showDebug(true);
+
+      Meteora.onStart(
+        function() {
+          new Filebrowser(
+            'filebrowser-demo',
+            '../server-side/filebrowser.php',
+            {
+              'path': '/'
+            }
+          );
+        }
+      );
+    </script>
+
+  </body>
+</html>

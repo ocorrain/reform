@@ -38,7 +38,7 @@
   (:metaclass ele:persistent-metaclass))
 
 (defclass news (post)
-  ((headline :initarg :headline :initform "" :accessor get-headline)
+  ((headline :initarg :headline :initform "" :accessor get-headline :index t)
    (story :initarg :story :initform "" :accessor get-story)
    (author :initarg :author :initform "" :accessor get-author))
   (:metaclass ele:persistent-metaclass))

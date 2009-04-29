@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Meteora.Form</title>
+    
+    <script src="../../src/meteora.js" type="text/javascript"></script>
+
+    <link type="text/css" rel="stylesheet" href="../css/test.css" />
+
+  </head>
+  <body>
+
+    <h1>Meteora.Form</h1>
+
+    <script type="text/javascript">
+      Meteora.showDebug(true);
+      
+      Meteora.uses('Meteora.Form');
+      //Meteora.uses('Fx.Scroll');
+
+    </script>
+
+    <div class="instructions">
+      Press the <b>Send</b> button. This control interacts with server-side scripts that output JSON
+      responses. Using this control you can perform many actions within the HTML document
+      (such as server-side validations) without having to refresh the page. Check the
+      <a href="jsonrpc.html">Core.Jsonrpc</a> demo to view the format of the
+      expected server's response.
+    </div>
+
+    <!-- Just add onsubmit="return formSubmit(this)" -->
+
+    <form method="post" action="../media/jsonrpc.json" onsubmit="return formSubmit(this)">
+      <label class="required mixed-class">
+        Required field:<br />
+        <input type="text" name="test_input" />
+      </label>
+      <label class="required-int">
+        Required integer:<br />
+        <input type="text" name="test_input_2" />
+      </label>
+      <label class="required-float">
+        Required float:<br />
+        <input type="text" />
+      </label>
+      <label class="required-alpha">
+        Required alpha:<br />
+        <input type="text" />
+      </label>
+      <label class="required-email">
+        Required email:<br />
+        <input type="text" />
+      </label>
+      <label class="anoter-class required">
+        Required select:<br />
+        <select name="req_select">
+          <option></option>
+          <option value="1">Option one</option>
+          <option value="2">Option two</option>
+          <option value="3">Option three</option>
+        </select>
+      </label>
+      <label>
+        Optional field:<br />
+        <input type="text" />
+      </label>
+
+			<fieldset>
+				<legend>Required radio</legend>
+				<input type="radio" name="foo" class="required" value="1"> opt 1<br />
+				<input type="radio" name="foo" class="required" value="2"> opt 2<br />
+				<input type="radio" name="foo" class="required" value="3"> opt 3<br />
+				<input type="radio" name="foo" class="required" value="4"> opt 4<br />
+			</fieldset>
+
+      <button type="submit">Send</button>
+      <button type="reset">Reset</button>
+    </form>
+    
+  </body>
+</html>

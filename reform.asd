@@ -15,7 +15,7 @@
   :serial t
   :version #.*reform-version*
   :depends-on (:elephant :split-sequence :toc-utils :hunchentoot :alexandria
-			 :cl-who :local-time :web-utils :ht-ajax)
+			 :cl-who :local-time :web-utils :ht-ajax :cl-markdown)
   :components ((:file "package")
 	       (:file "treat-file")
 	       (:file "store")
@@ -26,4 +26,5 @@
 	       (:file "display")
 	       (:file "tags")
 	       (:file "rss")
-	       (:file "comments")))
+	       (:file "comments")
+	       (:file "candidate")))

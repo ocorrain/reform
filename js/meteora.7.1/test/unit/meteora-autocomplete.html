@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+
+    <title>Meteora.Autocomplete</title>
+
+    <!-- meteora -->
+    <script src="../../src/meteora.js" type="text/javascript"></script>
+    <!-- meteora -->
+
+    <link type="text/css" rel="stylesheet" href="../css/test.css" />
+
+  </head>
+
+  <body>
+
+    <h1>Meteora.Autocomplete</h1>
+
+    <div class="instructions">
+      Put the first two or three letters of your country of origin, in English.
+    </div>
+
+    <h3>Country ID</h3>
+    <form method="/foo">
+      <label>
+         <input name="q" type="text" id="autocomplete_demo_1"/>
+      </label>
+      <label>
+         <input name="q" type="text" id="autocomplete_demo_2"/>
+      </label>
+      <label>
+         <input name="q" type="text" id="autocomplete_demo_3"/>
+      </label>
+      <button type="submit">submit</button>
+    </form>
+
+    <script type="text/javascript">
+
+      Meteora.uses('Meteora.Autocomplete');
+
+      Meteora.showDebug(true);
+
+      Meteora.onStart(
+        function () {
+          
+          new Autocomplete(
+            'autocomplete_demo_1',
+            {
+              'action': '../server-side/search.php',
+              'onClick': function(data) {
+                log('data.index = '+data.index+', data.content = '+data.content+'');
+              }
+            }
+          );
+
+          new Autocomplete(
+            'autocomplete_demo_2',
+            {
+              'action': '../server-side/search.php',
+              'onClick': function(data) {
+                log('data.index = '+data.index+', data.content = '+data.content+'');
+              }
+            }
+          ); 
+          
+          new Autocomplete(
+            'autocomplete_demo_3',
+            {
+              'action': '../server-side/search.php',
+              'onClick': function(data) {
+                log('data.index = '+data.index+', data.content = '+data.content+'');
+              }
+            }
+          );
+
+        }
+      );
+
+    </script>
+  </body>
+</html>

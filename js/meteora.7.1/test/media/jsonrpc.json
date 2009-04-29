@@ -1,0 +1,13 @@
+{
+  'errorMessage': 'This is an example error message.',
+  'inputError': [
+		{
+    	'name':     'test_input',
+    	'message':  'This is a test error message. Look at Meteora\'s log RESPONSE (1).'
+  	},
+		{
+    	'name':     'test_input_2',
+    	'message':  'This is a test error message. Look at Meteora\'s log RESPONSE (2).'
+  	}
+	]
+}

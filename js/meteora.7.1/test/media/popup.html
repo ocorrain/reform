@@ -1,0 +1,28 @@
+
+<button onclick="document.test.top();">top</button>
+<button onclick="document.test.left();">left</button>
+<button onclick="document.test.bottom();">bottom</button>
+<button onclick="document.test.right();">right</button>
+<button onclick="document.test.center();">center</button>
+
+<input name="q" type="text" id="autocomplete_demo_input"/>
+<span id="result-wrapper" style="display: none">
+<h4>Result</h4>
+<span id="result"></span>
+</span>
+
+
+<script type="text/javascript">
+  new Autocomplete(
+    'autocomplete_demo_input',
+    {
+      'action': '../server-side/search.php',
+      'rowClick': function(data) {
+        $('result').setContent(Widget.fromHTML('<b>Country name:</b> '+data.content+', <b>Code:</b> '+data.index));
+        $('result-wrapper').show();
+      }
+    }
+  );
+</script>
+
+

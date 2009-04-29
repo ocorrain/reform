@@ -93,10 +93,27 @@
 			:value (esc (or (get-headline object) "")))))
       (:tr (:td ((:label :for "author") "Author"))
 	   (:td (:input :type "text" :name "author"
-			:value (esc (or (get-author object) "")))))
-      (:tr (:td ((:label :for "upload") "Upload")
-		(:p "Only HTML and plain text files"))
-	   (:td (:input :type "file" :name "upload")))))))
+			:value (esc (or (get-author object) ""))))))
+     
+     ((:textarea :id "story" :name "story" :style "height:400px;width:500px;")
+      (str (get-story object))) 
+      ;; (:tr (:td ((:label :for "upload") "Upload")
+      ;; 		(:p "Only HTML and plain text files"))
+      ;; 	   (:td (:input :type "file" :name "upload")))
+      )
+    ((:script :type "text/javascript")
+     "
+Meteora.uses('Meteora.Editor');
+
+Meteora.onStart(
+  function() {
+    new Editor(
+      'story', { mode: 'basic' }
+    );
+  }
+);
+
+")))
 
 
 (defmethod html-form ((object debate) output-stream &optional new)
@@ -205,13 +222,16 @@
     (setf (get-headline obj) title))
   (when-bind (author (get-form-field 'author parameters))
     (setf (get-author obj) author))
-  (when-bind (upload (get-form-field 'upload parameters))
-    (destructuring-bind (path filename content-type)
-	upload
-      (declare (ignore filename))
-      (if (member content-type *acceptable-content-types* :test #'equal)
-	  (setf (get-story obj) (html-clean path))
-	  (error "Unacceptable content")))))
+  (when-bind (story (get-form-field 'story parameters))
+	     (setf (get-story obj) story))
+  ;; (when-bind (upload (get-form-field 'upload parameters))
+  ;;   (destructuring-bind (path filename content-type)
+  ;; 	upload
+  ;;     (declare (ignore filename))
+  ;;     (if (member content-type *acceptable-content-types* :test #'equal)
+  ;; 	  (setf (get-story obj) (html-clean path))
+  ;; 	  (error "Unacceptable content"))))
+  )
 
 (defmethod apply-changes ((obj debate) parameters)
   (when-bind (motion (get-form-field 'motion parameters))

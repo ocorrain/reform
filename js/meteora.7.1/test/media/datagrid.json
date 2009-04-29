@@ -1,0 +1,9 @@
+[
+{id: 'ID', birthDate: 'Birth Date', name: 'Name', 'gender': 'Gender', telephone: 'Telephone'},
+{id: 1, birthDate: '1974-05-02', name: 'Maria Juarez', gender: 'F', telephone: '99826542'},
+{id: 2, birthDate: '1999-12-11', name: 'Joe Cool', gender: 'M', telephone: '76458879'},
+{id: 3, birthDate: '1990-10-14', name: 'Igov Ivanov', gender: 'M', telephone: '18576243'},
+{id: 4, birthDate: '1983-03-02', name: 'Tang lee', gender: 'F', telephone: '93750183'},
+{id: 5, birthDate: '1980-02-02', name: 'Adamo Romo', gender: 'M', telephone: '67838172'},
+{id: 6, birthDate: '1999-12-24', name: 'Gina Piccoli', gender: 'F', telephone: '29958281'}
+]

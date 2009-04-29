@@ -45,24 +45,33 @@
     
 	 ((:div :class (format nil "span-~A last" (1- (get-comment-span indent))))
 	  ((:h6 :class "alt")
-	   (fmt "Posted at ~a by ~A" 
-		(timestring (get-posted c))
-		(get-author c)))
+	   (:b (str (get-author c)) "&ndash;")
+	   (str (format-duration (- (get-universal-time) (get-posted c)))) " "
+	   (fmt "(Score: ~A)" (get-votes c)))
+	  (multiple-value-bind (doc string)
+	      (cl-markdown:markdown (get-comment c) :format :html :stream nil)
+	    (declare (ignore doc))
+	    (str string)))
+	 
 	  (:p (esc (get-comment c)))
 	  (when-bind (user (get-user))
-		     (htm ((:p :class "incr") ((:a :href (get-url c)) "link") "&nbsp&nbsp;&nbsp;"
-			   ((:a :href (format nil "/report-comment?comment=~A" (get-id c)))
+		     (htm ((:p :class "incr")
+			   ((:a :class "comment" :href (get-url c)) "link") "&nbsp&nbsp;&nbsp;"
+			   ((:a :class "comment" :href (get-url (get-parent c)))
+			    "parent") "&nbsp&nbsp;&nbsp;"
+			   ((:a :class "comment" :href (format nil "/report-comment?comment=~A" (get-id c)))
 			    "report") "&nbsp&nbsp;&nbsp;"
-			   ((:a :href "#" :onclick (format nil "javascript:toggle_visible(~A);return false;" (get-id c)))
+			   ((:a :class "comment" :href "#" :onclick (format nil "javascript:toggle_visible(~A);return false;" (get-id c)))
 			    "reply")
 			   (if (or (equal (get-author c) (get-username user))
 				   (has-capability* 'admin))
 			       (htm "&nbsp&nbsp;&nbsp;"
-				    ((:a :href (format nil "/delete-comment?comment=~A" (get-id c)))
+				    ((:a :class "comment" :href (format nil "/delete-comment?comment=~A" (get-id c)))
 				     "delete"))))
-			  (:p (str (threaded-comment-form c))))))
+			  (:p (str (threaded-comment-form c)))))
+	 (:hr :class "space"))
 	 (if (get-children c)
-	     (str (print-comments (get-children c) (1+ indent)))))))
+	     (str (print-comments (get-children c) (1+ indent))))))
 
 (defmethod print-comment ((c deleted-comment) &optional (indent 0))
   (html ((:div :class (get-comment-css indent))
@@ -145,3 +154,23 @@
 		       :comment comment)
 	(get-children parent))
   (incf (get-total-comments (get-debate parent))))
+
+(defparameter *durations*
+  '((1 . second) (60 . minute) (3600 . hour ) (86400 . day)
+    (204800 . week) (2678400 . month) (31536000 . year)))
+
+(defun find-duration (secs durations &optional saved)
+  (cond ((null durations) saved)
+	((zerop secs) (car durations))
+	((>= secs (caar durations))
+	 (find-duration secs (cdr durations) (car durations)))
+	(t saved)))
+
+(defun format-duration (seconds &optional (durations *durations*))
+  (destructuring-bind (seconds-in-duration . period)
+      (find-duration seconds durations)
+    (when seconds-in-duration
+      (let ((formatstr (format nil "~~A ~A~~:P ago"
+			       (string-downcase (symbol-name period)))))
+	(format nil formatstr (floor (/ seconds seconds-in-duration)))))))
+

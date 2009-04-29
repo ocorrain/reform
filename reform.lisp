@@ -134,7 +134,8 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
      (setf (html-mode) :sgml)
      (:html
       (:head (:title (fmt "~A - reform.ie" ,title))
-	     (str *css-include*))
+	     (str *css-include*)
+	     ((:script :type "text/javascript" :src "/js/meteora/meteora.js")))
       (:body
        (when (and ,ajax (boundp 'hunchentoot:*session*) hunchentoot:*session*)
 	 (htm (:script :type "text/javascript" :src "/js/rate.js")

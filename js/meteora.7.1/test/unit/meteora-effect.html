@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Fx.Visual</title>
+
+    <script src="../../src/meteora.js" type="text/javascript"></script>
+
+    <style type="text/css">
+    #buttons button {
+      font-size: small;
+      display: block;
+      margin: 4px;
+      font-weight: normal;
+      width: 100%;
+      text-align: center;
+    }
+    #buttons {
+      float: left;
+      width: 180px;
+    }
+    #display {
+      margin-left: 200px;
+      clear: right;
+    }
+    #demo-image {
+      margin-left: 10px; 
+      padding: 10px;
+    }
+    </style>
+    
+    <link type="text/css" rel="stylesheet" href="../css/test.css" />
+
+    <script type="text/javascript">
+      Meteora.uses('Fx.Visual');
+    </script>
+
+  </head>
+  <body>
+
+    <h1>Fx.Visual</h1>
+
+    <div class="instructions">
+      Click the buttons to see a demo of each effect.
+    </div>
+
+    <div id="buttons">
+      <button onclick="Effect.fade('demo-image', { 'onComplete': function(el) { Effect.appear(el); } });">Fade/Appear</button>
+      <button onclick="Effect.width('demo-image', 50, { 'onComplete': function(el) { Effect.width(el, 300) }})">Width</button>
+      <button onclick="Effect.height('demo-image', 50, { 'onComplete': function(el) { Effect.height(el, 203) }})">Height</button>
+      <button onclick="Effect.resizeTo('demo-image', 50, 34, { 'onComplete': function(el) { Effect.resizeTo(el, 300, 203) }})">ResizeTo</button>
+      <button onclick="Effect.pulsate('demo-image')">Pulsate</button>
+      <button onclick="Effect.highlight('demo-image', {'startColor': '#ffffff', 'endColor': '#00ffff' })">Highlight</button>
+      <button onclick="Effect.puff('demo-image', { onComplete: function(el) { Effect.appear(el); } })">Puff</button>
+      <button onclick="Effect.shake('demo-image')">Shake</button>
+      <button onclick="Effect.drop('demo-image', { onComplete: function(el) { Effect.appear(el); } })">Drop</button>
+      <button onclick="Effect.shrink('demo-image', { onComplete: function(el) { Effect.appear(el); } })">Shrink</button>
+      <button onclick="Effect.expand('demo-image', 300*2.5, 203*2.5, { onComplete: function(el) { el.style.top = ''; el.style.left = ''; el.style.position = ''; el.style.width = '300px'; el.style.height = '203px'; } })">Expand</button>
+      <button onclick="Effect.fade('demo-image', {'duration': 400}); Effect.slideOut('demo-image', { 'duration': 400, 'onComplete': function(el) { Effect.appear(el, {'duration': 400}); Effect.slideIn(el, {'duration': 400}) }})">Fade + slideOut</button>
+      <button onclick="Effect.slideOut('demo-image', { 'onComplete': function(el) { Effect.slideIn(el); } });">Slide In/Out</button>
+    </div>
+
+    <div id="display">
+      <img width="300" height="203" id="demo-image" src="../media/demo.jpg" />
+    </div>
+
+  </body>
+</html>

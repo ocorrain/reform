@@ -48,3 +48,16 @@ blockquote {
 h1.alt {
     font-size: 220%;
 }
+
+a.comment:link, a.comment:visited, a.comment:active {
+    text-decoration: none;
+    color: #666;
+}
+
+.candidate-display blockquote {
+    font-size: 120%;
+}
+
+.candidate-display ul {
+    font-size: 120%;
+}

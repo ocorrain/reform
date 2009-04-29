@@ -1,0 +1,67 @@
+body {
+  font-family: 'Arial';
+  color: #000;
+  font-size: medium;
+  margin: 0.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+  padding: 0;
+  color: #000;
+}
+h1 {
+  color: #06c;
+}
+a, a:link, a:hover, a:visited {
+  color: #06c;
+  text-decoration: none;
+}
+a:hover {
+  color: #00c;
+  text-decoration: underline;
+}
+.instructions {
+  font-size: 1em;
+  margin: 0.5em;
+  padding: 0.5em;
+  border: 3px solid #eee;
+  background: #f6f6f6;
+}
+.details {
+  font-size: small;
+  padding-left: 1em;
+}
+.menu {
+  list-style: none;
+  padding-left: 1.2em;
+  font-size: small;
+}
+.menu li {
+  list-style: none;
+}
+.menu a span {
+  font-weight: bold;
+}
+.demo-block {
+  display: block;
+  width: 100px;
+  height: 100px;
+  background: #D2EF9E;
+  margin: 10px;
+  padding: 5px;
+  border: 3px dashed #90CD23;
+}
+label {
+  display: block;
+}
+table td {
+  vertical-align: top;
+}
+.twocolumns {
+  overflow: auto;
+}
+.twocolumns .column {
+  float: left;
+  width: 49%;
+}

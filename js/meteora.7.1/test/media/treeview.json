@@ -1,0 +1,26 @@
+[
+  {
+    'label': 'Click me',
+    'onClick': 'alert(\'clicked!\')',
+    'items': [
+      {
+        'label': 'Dummy label'
+      },
+      {
+        'label': 'Random joe'
+      }
+    ]
+  },
+  {
+    'label': 'Ajax',
+    'items': [
+      {
+        'label': 'Recursive',
+        'items': '../media/treeview.json'
+      },
+      {
+        'label': 'Foo'
+      }
+    ]
+  }
+]

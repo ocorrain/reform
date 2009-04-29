@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Meteora.Tablesort</title>
+
+    <script src="../../src/meteora.js" type="text/javascript"></script>
+
+    <style type="text/css">
+    #table-demo th {
+      border: 1px solid #888;
+      background: #eee;
+      padding: 0.5em;
+    }
+    #table-demo td {
+      border: 1px solid #eee;
+      padding: 0.5em;
+    }
+    </style>
+
+    <link type="text/css" rel="stylesheet" href="../css/test.css" />
+  </head>
+  <body>
+
+    <h1>Meteora.Tablesort</h1>
+
+    <div class="instructions">
+      Click on a table header to sort the rows. Click again to sort in the inverse order.
+    </div>
+
+    <table id="table-demo">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Planet</th>
+          <th>Robot</th>
+          <th>T. I.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Han Fastolfe</td>
+          <td>Aurora</td>
+          <td>R. Giskard Reventlov</td>
+          <td>-118.7%</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Gladia Dermarre</td>
+          <td>Solaria</td>
+          <td>R. Jander Panell</td>
+          <td>0%</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Elijah Baley</td>
+          <td>Earth</td>
+          <td>R. Daneel Olivaw</td>
+          <td>
+            <span class="woot">
+              295.8%
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Vasilia Aliena</td>
+          <td>Aurora</td>
+          <td>R. Giskard Reventlov</td>
+          <td>99.9%</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Santirix Gremionis</td>
+          <td>Aurora</td>
+          <td>None known</td>
+          <td>1.23%</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Kelden Amadiro</td>
+          <td>Aurora</td>
+          <td>None known</td>
+          <td>
+          <span class="xx">
+            3.67%
+          </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script type="text/javascript">
+      Meteora.uses('Meteora.Tablesort');
+
+      Meteora.onStart(
+        function() {
+          new Tablesort('table-demo');
+        }
+      );
+    </script>
+
+  </body>
+</html>

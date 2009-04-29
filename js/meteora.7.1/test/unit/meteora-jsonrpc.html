@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Core.Jsonrpc</title>
+  
+    <!-- Meteora -->
+    <script src="../../src/meteora.js" type="text/javascript"></script>
+    <!-- Meteora -->
+   
+    <style type="text/css">
+    #jsonrpc-console {
+      width: 300px;
+      height: 100px;
+    }
+    #ul-test {
+      list-style-type: none;
+      width: 200px;
+    }
+    #ul-test li {
+      font-size: small;
+      margin: 0px;
+      padding: 4px;
+      display: block;
+      width: 100%;
+      color: #333;
+    }
+    #li-test-1 { background: #DB0000; }
+    #li-test-2 { background: #FF8800; }
+    #li-test-3 { background: #CBFF00; }
+    #li-test-4 { background: #A6FF00; }
+    #li-test-5 { background: #00CB89; }
+    #li-test-6 { background: #009DCB; }
+    #li-test-7 { background: #6F00CB; }
+    </style>
+
+    <link type="text/css" rel="stylesheet" href="../css/test.css" />
+  </head>
+  <body>
+
+    <h1>Core.Jsonrpc</h1>
+
+    <div class="instructions">
+      Click on the available tests or write down Jsonrpc code on the textarea below.
+      Jsonrpc is the format of the responses that Meteora expects to receive from
+      the server-side application. The text inside the textarea will be evaluated as
+      if it were the server's response (for example, when using
+      <a href="form.html">Meteora.Form</a>).
+    </div>
+
+    <div class="twocolumns">
+      <div class="column">
+
+        <h3>Jsonrpc console</h3>
+        <textarea id="jsonrpc-console"></textarea>
+        <br />
+        <button onclick="execute()">Execute.</button>
+        <h3>Available tests</h3>
+        <ul>
+          <li><a href="javascript:void(0)" onclick="return test(1)">test 1</a></li>
+          <li><a href="javascript:void(0)" onclick="return test(2)">test 2</a></li>
+          <li><a href="javascript:void(0)" onclick="return test(3)">test 3</a></li>
+          <li><a href="javascript:void(0)" onclick="return test(4)">test 4</a></li>
+          <li><a href="javascript:void(0)" onclick="return test(5)">test 5</a></li>
+        </ul>
+
+      </div>
+      <div class="column">
+        <h3>#ul-test</h3>
+        <ul id="ul-test">
+          <li id="li-test-1">#li-test-1</li>
+          <li id="li-test-2">#li-test-2</li>
+          <li id="li-test-3">#li-test-3</li>
+          <li id="li-test-4">#li-test-4</li>
+          <li id="li-test-5">#li-test-5</li>
+          <li id="li-test-6">#li-test-6</li>
+          <li id="li-test-7">#li-test-7</li>
+        </ul>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+
+      // This is not necessary, since Core.Jsonrpc is part of the core
+      Meteora.uses('Core.Jsonrpc');
+      
+      function execute() {
+        new JsonRpc($('jsonrpc-console').value);
+      }
+
+      function test(index) {
+        var v = '';
+        switch(index) {
+          case 1:
+            v += '{\n';
+            v += '  appendTo: {\n';
+            v += '    objectId: \'ul-test\',\n';
+            v += '    data: \'<li style="background: black"></li>\'\n';
+            v += '  },\n';
+            v += '  successMessage: \'Success message example\'\n';
+            v += '}';
+          break;
+          case 2:
+            v += '{\n';
+            v += '  prependTo: {\n';
+            v += '    objectId: \'ul-test\',\n';
+            v += '    data: \'<li style="background: black"></li>\'\n';
+            v += '  }\n';
+            v += '}';
+          break;
+          case 3:
+            v += '{\n';
+            v += '  injectBefore: {\n';
+            v += '    objectId: \'li-test-3\',\n';
+            v += '    data: \'<li style="background: black"></li>\'\n';
+            v += '  }\n';
+            v += '}';
+          break;
+          case 4:
+            v += '{\n';
+            v += '  injectAfter: {\n';
+            v += '    objectId: \'li-test-3\',\n';
+            v += '    data: \'<li style="background: black"></li>\'\n';
+            v += '  }\n';
+            v += '}';
+          break;
+          case 5:
+            v += '{\n';
+            v += '  deleteObject: \'li-test-5\',\n';
+            v += '  successMessage: \'#li-test-5 was deleted.\',\n';
+            v += '  execute: \'alert("This code will be eval()\\\'ed.")\'\n';
+            v += '}';
+          break;
+        }
+        $('jsonrpc-console').value = v;
+      }
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+
+    <title>Meteora.Carousel</title>
+
+    <!-- meteora -->
+    <script src="../../src/meteora.js" type="text/javascript"></script>
+    <!-- meteora -->
+
+    <link type="text/css" rel="stylesheet" href="../css/test.css" />
+
+    <style type="text/css">
+      #carousel-test {
+        width: 360px;
+      }
+      #carousel-test ul.m-carousel-items li {
+        width: 120px;
+        height: 64px;
+        font-size: x-large;
+        color: #000;
+        font-style: italic;
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <script type="text/javascript">
+
+      Meteora.uses('Meteora.Carousel');
+
+      Meteora.onStart(
+        function() {
+          var carousel = new Carousel(
+            'carousel-test'
+          );
+          document.carousel = carousel;
+        }
+      );
+    </script>
+
+    <h1>Meteora.Carousel</h1>
+
+    <div class="instructions">
+      Click on the buttons below to move the carousel back and forward.
+    </div>
+
+    <button onmousedown="document.carousel.back(3);">&laquo; 3</button>
+    <button onmousedown="document.carousel.back();">&laquo; 1</button>
+    
+    <button onmousedown="document.carousel.forward();">1 &raquo;</button>
+    <button onmousedown="document.carousel.forward(3);">3 &raquo;</button>
+    
+    <button onmousedown="document.carousel.seek('b-li');">Seek b-li</button>
+
+    <div id="carousel-test">
+      <ul class="m-carousel-items">
+        <li style="background: #FF0000">1</li>
+        <li style="background: #FF4400">2</li>
+        <li style="background: #FF8800">3</li>
+        <li style="background: #FFCC00">4</li>
+        
+        <li style="background: #FFFF00">5</li>
+        <li style="background: #CCFF00">6</li>
+        <li style="background: #44FF00">7</li>
+        <li style="background: #00FF00">8</li>
+        
+        <li style="background: #00FF00">9</li>
+        <li style="background: #00FF44">A</li>
+        <li style="background: #00FF88" id="b-li">B</li>
+        <li style="background: #00FFCC">C</li>
+        
+        <li style="background: #00FFFF">D</li>
+        <li style="background: #00CCFF">E</li>
+        <li style="background: #0088FF">F</li>
+        <li style="background: #0044FF">G</li>
+        
+        <li style="background: #0000FF">H</li>
+        <li style="background: #4400FF">I</li>
+        <li style="background: #8800FF">J</li>
+        <li style="background: #CC00FF">K</li>
+        
+        <li style="background: #FF00FF">L</li>
+        <li style="background: #FF00CC">M</li>
+        <li style="background: #FF0088">N</li>
+        <li style="background: #FF0044">O</li>
+      </ul>
+    </div>
+
+  </body>
+</html>
