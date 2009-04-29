@@ -49,12 +49,23 @@
 			 (get-id obj) (symbol-name (type-of obj))))
        "[ edit ]"))))
 
+(defmethod display :before ((obj news) (type display-short))
+  (when (has-capability* 'poster)
+    (with-html-output-to-string (s)
+      ((:a :href (format nil "/edit.html?instance-id=~A&type=~A"
+			 (get-id obj) (symbol-name (type-of obj))))
+       "[ edit ]"))))
+
 
 (defmethod display ((obj news) (type display-short))
   (multiple-value-bind (teaser more?)
       (get-teaser (html->text (get-story obj)))
     (with-html-output-to-string (s)
       (:p
+       (when (has-capability* 'poster)
+	 (htm ((:a :href (format nil "/edit.html?instance-id=~A&type=~A"
+			      (get-id obj) (symbol-name (type-of obj))))
+	    "[ edit ]")) )
        (:em (str (get-headline obj)))
        " " (str teaser)
        (when more?

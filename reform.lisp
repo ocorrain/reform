@@ -149,8 +149,36 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 	 (user-pane *standard-output*))
 	;; ((:div :class "span-24 last")
 	;;  (str (print-menu)))
-	,@body)))))
+	,@body
+	(:hr)
+	(str (footer)))))))
+
 ;(str (print-menu))
+
+(defun footer ()
+  (html ((:div :class "span-8" )
+	 ((:p :align "left")
+	  (str (social-networking-button "http://twitter.com/reformdotie"
+					 "/images/twitter.png"
+					 "Follow us on Twitter"))))
+	((:div :class "span-8")
+	 ((:p :align "center")
+	  (str (social-networking-button "http://www.facebook.com/group.php?gid=97033075490"
+					 "/images/facebook.png"
+					 "Find us on Facebook"))))
+
+	((:div :class "span-8 last")
+	 ((:p :align "right")
+	  (str (social-networking-button "http://www.bebo.com/ReformD9"
+						  "/images/bebo-icon.jpg"
+						  "Find us on Bebo"))))))
+
+
+
+(defun social-networking-button (url image alt)
+  (html ((:a :href url)
+	 (:img :src image :alt alt))))
+
 
 (defun print-menu ()
   (with-html-output-to-string (s)
