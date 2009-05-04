@@ -8,7 +8,7 @@ a.menulink:link, a.menulink:visited, a.menulink:active { color: #e80a09;
 
 a.menulink:hover { text-decoration: underline; }
 
-p.menulink { font-size: 14pt;
+p.menulink { font-size: 12pt;
 	     text-align: right;
 }
 
@@ -31,8 +31,10 @@ p.menulink { font-size: 14pt;
 }
 
 body {
-    background-image: none;  /* url('/images/branch.jpg'); */
-    background-repeat: no-repeat;
+    background-image:  none; /* url('/images/EU.jpg');   */
+    /* background-repeat: no-repeat; */
+    /* background-attachment: fixed; */
+    /* background-position: top; */
 }
 
 .alt {

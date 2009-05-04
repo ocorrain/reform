@@ -145,12 +145,13 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 	      (str (ht-ajax:generate-prologue *ajax-processor*))))
        
        ((:div :class "container")
-	((:div :class "span-15")
-	 (:hr)
+	((:div :class "span-10")
+	 
 	 ((:h1 :class "alt") ((:a :href "/welcome.html") (:img :src "/images/reform.jpg" :alt "reform.ie")))
 	 ((:h3 :class "alt") (str (get-nugget))))
-	((:div :class "span-9 last")
+	((:div :class "span-14 last")
 	 (user-pane *standard-output*))
+	(:hr :class "space")
 	;; ((:div :class "span-24 last")
 	;;  (str (print-menu)))
 	,@body
@@ -187,6 +188,7 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 (defun print-menu ()
   (with-html-output-to-string (s)
     ((:p :class "menulink")
+     ((:a :class "menulink" :href "/mcnamara") "candidate") "  /  "
      ((:a :class "menulink" :href "/policy.html") "policy") "  /  "
      ((:a :class "menulink" :href "/articles.html") "articles") "  /  "
      ;; ((:a :class "menulink" :href "/news.html") "news") "  /  "
