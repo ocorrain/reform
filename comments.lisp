@@ -51,9 +51,7 @@
 	  (multiple-value-bind (doc string)
 	      (cl-markdown:markdown (get-comment c) :format :html :stream nil)
 	    (declare (ignore doc))
-	    (str string)))
-	 
-	  (:p (esc (get-comment c)))
+	    (str string))
 	  (when-bind (user (get-user))
 		     (htm ((:p :class "incr")
 			   ((:a :class "comment" :href (get-url c)) "link") "&nbsp&nbsp;&nbsp;"
@@ -68,7 +66,9 @@
 			       (htm "&nbsp&nbsp;&nbsp;"
 				    ((:a :class "comment" :href (format nil "/delete-comment?comment=~A" (get-id c)))
 				     "delete"))))
-			  (:p (str (threaded-comment-form c)))))
+			  (:p (str (threaded-comment-form c))))))
+
+	  
 	 (:hr :class "space"))
 	 (if (get-children c)
 	     (str (print-comments (get-children c) (1+ indent))))))

@@ -20,7 +20,7 @@
     (let ((tag-links
 	   (mapcar (lambda (tag)
 		     (let* ((tag-name (get-tag-name tag))
-			    (js-link (format nil "javascript:toggle(\"~A\",\"~A\",\"~A\")"
+			    (js-link (format nil "javascript:reform_toggle(\"~A\",\"~A\",\"~A\")"
 					     tag-name
 					     (symbol-name (type-of obj))
 					     (get-id obj))))

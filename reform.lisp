@@ -1,3 +1,4 @@
+
 (in-package #:reform)
 
 (defmacro html (&body body)
@@ -135,7 +136,9 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
      (:html
       (:head (:title (fmt "~A - reform.ie" ,title))
 	     (str *css-include*)
-	     ((:script :type "text/javascript" :src "/js/meteora/meteora.js")))
+	     (when (has-capability* 'poster)
+	       (htm ((:script :type "text/javascript" :src "/js/meteora/meteora.js")))))
+      
       (:body
        (when (and ,ajax (boundp 'hunchentoot:*session*) hunchentoot:*session*)
 	 (htm (:script :type "text/javascript" :src "/js/rate.js")
