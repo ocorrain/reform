@@ -8,6 +8,11 @@ a.menulink:link, a.menulink:visited, a.menulink:active { color: #e80a09;
 
 a.menulink:hover { text-decoration: underline; }
 
+a {
+    color: #e80a09;
+    text-decoration: none;
+}
+
 p.menulink { font-size: 12pt;
 	     text-align: right;
 }

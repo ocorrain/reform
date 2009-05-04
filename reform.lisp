@@ -240,7 +240,43 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
      (str *twitter-include*)
      ;(str *twitter-flash-include*)
  
-     )))
+     )))				
+
+(hunchentoot:define-easy-handler (new-first-page :uri "/new-welcome.html")
+    ()
+  (flet ((print-top-n-by-tag-name (tag-name n)
+	   (let* ((tag (get-tag-by-name tag-name))
+		  (articles (get-tagged-of-type tag 'article)))
+	     (html (:h2 ((:a :href (get-url tag)) (str tag-name)))
+		   (dolist (a (subseq articles 0 (min n (length articles))))
+		     (htm (str (display a (short-display)))))))))
+    (with-standard-page (:title "Welcome to the Reform website")
+      ((:div :class "span-24 last")
+       ((:blockquote :style "font-size:14pt;font-family:sans-serif;font-style:normal;")
+	(:p "The Republic guarantees religious and civil
+	liberty, equal rights and equal opportunities to all its
+	citizens, and declares its resolve to pursue the happiness and
+	prosperity of the whole nation and all of its parts,
+	cherishing all of the children of the nation equally" )
+	((:p :align "right") "&mdash;Proclamation of Irish independence, Easter Monday 1916")))
+      ((:div :class "span-11 colborder")
+       (str (print-top-n-by-tag-name "Local government" 2))
+       (:hr)
+       (str (print-top-n-by-tag-name "European Union" 2)))
+      ((:div :class "span-12 last")
+       ((:p :align "center")  (:img :src (get-random-candidate-image)) (:br)
+	((:a :href "/mcnamara") "Michael McNamara - Reform candidate"))
+       (:hr)
+       (:h2 "Debates")
+       (dolist (debate (get-top-n 'debate 10))
+	 (htm (str (display debate (short-display)))))
+       (:hr)
+       (:h2 "News")
+       (str (get-news))
+       ))))
+
+
+    
 
 (defun get-debates ()
   (when-bind (top-2 (get-top-n 'debate 2))

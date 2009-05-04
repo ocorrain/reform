@@ -15,7 +15,7 @@
      also worked as a consultant on EU democratisation programmes in
      the Middle East and South Asia."))
      ((:div :class "span-8 last")
-      (:img :src "/images/candidates/mmn.jpg"))
+      (:img :src (get-random-candidate-image)))
      ((:div :class "span-24 last")
       (:h2 "Policies"))
 
@@ -97,4 +97,7 @@ government is no longer sustainable."))
   (mick))
 
 
+
+(defun get-random-candidate-image ()
+  (format nil "/images/candidates/mcnamara~A.jpg" (1+ (random 5))))
 
