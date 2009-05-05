@@ -27,4 +27,5 @@
 	       (:file "tags")
 	       (:file "rss")
 	       (:file "comments")
-	       (:file "candidate")))
+	       (:file "candidate")
+	       (:file "messages")))

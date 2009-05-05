@@ -7,7 +7,8 @@
    (capabilities :initform '() :accessor get-capabilities :index t)
    (liked :initform '() :accessor get-liked)
    (disliked :initform '() :accessor get-disliked)
-   (messages :initform '() :accessor get-messages))
+   (messages :initform '() :accessor get-messages)
+   (old-messages :initform '() :accessor get-old-messages))
   (:metaclass ele:persistent-metaclass))
 
 (defun get-admins ()
@@ -59,7 +60,10 @@
   (when-bind (user (hunchentoot:session-value 'user))
 	     (with-html-output (s stream)
 	       ((:p :align "right" :style "font-size:120%")
-		"logged in as " (:b (str (get-username user))) " | " 
+		"logged in as " (:b (str (get-username user))) " | "
+		(let ((len (length (get-messages user))))
+		  (html (fmt "~:D new <a href=/messages>message~:P</a>" len)))
+		 " | "
 		((:a :href "/logout.html") "log out")
 		(if (has-capability* 'admin)
 		    (htm (:br) ((:a :href "/new.html?type=user") "new user")

@@ -61,7 +61,8 @@
 			    "parent") "&nbsp&nbsp;&nbsp;"
 			   ((:a :class "comment" :href (format nil "/report-comment?comment=~A" (get-id c)))
 			    "report") "&nbsp&nbsp;&nbsp;"
-			   ((:a :class "comment" :href "#" :onclick (format nil "javascript:toggle_visible(~A);return false;" (get-id c)))
+			   ((:a :class "comment" :href "#"
+				:onclick (format nil "javascript:toggle_visible(~A);return false;" (get-id c)))
 			    "reply")
 			   (if (or (equal (get-author c) (get-username user))
 				   (has-capability* 'admin))
@@ -69,7 +70,7 @@
 				    ((:a :class "comment" :href (format nil "/delete-comment?comment=~A" (get-id c)))
 				     "delete"))))
 			  (:p (str (threaded-comment-form c))))))
-	 (:hr :class "space"))
+	 (:br))
 	(unless no-recurse
 	  (when (get-children c)
 	    (str (print-comments (get-children c) (1+ indent)))))))
@@ -84,7 +85,7 @@
 (defun threaded-comment-form (c)
   (html ((:form :id (get-id c) :style "display:none" :method "post" :action "/post-to-thread.html")
 	 (:textarea  :style "height: 75px"
-		    :name "comment" :rows 5) (:br)
+ 		    :name "comment" :rows 5) (:br)
 	 ((:button :type "submit" :name "comment") "reply")
 	 (:input :type "hidden" :name "type" :value (type-of c))
 	 (:input :type "hidden" :name "reply-to" :value (get-id c)))))
@@ -148,13 +149,17 @@
   (incf (get-total-comments parent)))
 
 (defmethod add-new-comment ((parent threaded-comment) user comment)
-  (push (make-instance 'threaded-comment
-		       :parent parent
-		       :debate (get-debate parent)
-		       :author (get-username user)
-		       :comment comment)
-	(get-children parent))
-  (incf (get-total-comments (get-debate parent))))
+  (let ((parent-user (get-user-by-name (get-author parent)))
+	(this-comment (make-instance 'threaded-comment
+				     :parent parent
+				     :debate (get-debate parent)
+				     :author (get-username user)
+				     :comment comment)))
+
+    (push this-comment (get-children parent))
+    (push this-comment (get-messages parent-user))
+    (incf (get-total-comments (get-debate parent)))))
+
 
 (defparameter *durations*
   '((1 . second) (60 . minute) (3600 . hour ) (86400 . day)
