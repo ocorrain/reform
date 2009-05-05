@@ -1,4 +1,4 @@
-a.menulink:link, a.menulink:visited, a.menulink:active { color: #e80a09;
+a.menulink:link, a.menulink:visited, a.menulink:active { color: #F10507;
 						 	 text-decoration: none;
 							 font-family: sans-serif;
 							 font-weight: 100;
@@ -8,10 +8,21 @@ a.menulink:link, a.menulink:visited, a.menulink:active { color: #e80a09;
 
 a.menulink:hover { text-decoration: underline; }
 
+
 a {
     color: #e80a09;
     text-decoration: none;
 }
+
+a.headerlink:link, a.headerlink:visited, a.headerlink:active { color: black;
+						 	 text-decoration: none;
+							 font-family: sans-serif;
+}
+
+a.headerlink:hover {
+    text-decoration: underline;
+	      }
+
 
 p.menulink { font-size: 12pt;
 	     text-align: right;

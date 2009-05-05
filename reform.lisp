@@ -216,38 +216,38 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 
 
 
-(hunchentoot:define-easy-handler (first-page :uri "/welcome.html")
-    ()
-  (with-standard-page (:title "Welcome to the Reform website")
-    (str (get-top-tags))
-    (:hr)
-     (:hr :class "space")
-    ((:div :class "span-16 colborder")
-     ((:blockquote :style "font-size:14pt;font-family:sans-serif;font-style:normal;")
-      (:p "The Republic guarantees religious and civil
-	liberty, equal rights and equal opportunities to all its
-	citizens, and declares its resolve to pursue the happiness and
-	prosperity of the whole nation and all of its parts,
-	cherishing all of the children of the nation equally" ))
-     ((:p :align "right") "&mdash;Proclamation of Irish independence, Easter Monday 1916")
-     (:hr)
-     (str (get-debates)))
-    ((:div :class "span-7 last")
-     (when-bind (news (get-news))
-     		(htm
-     		 (:h3 "News")
-     		 (str news)))
-     (str *twitter-include*)
-     ;(str *twitter-flash-include*)
+;; (hunchentoot:define-easy-handler (first-page :uri "/welcome.html")
+;;     ()
+;;   (with-standard-page (:title "Welcome to the Reform website")
+;;     (str (get-top-tags))
+;;     (:hr)
+;;      (:hr :class "space")
+;;     ((:div :class "span-16 colborder")
+;;      ((:blockquote :style "font-size:14pt;font-family:sans-serif;font-style:normal;")
+;;       (:p "The Republic guarantees religious and civil
+;; 	liberty, equal rights and equal opportunities to all its
+;; 	citizens, and declares its resolve to pursue the happiness and
+;; 	prosperity of the whole nation and all of its parts,
+;; 	cherishing all of the children of the nation equally" ))
+;;      ((:p :align "right") "&mdash;Proclamation of Irish independence, Easter Monday 1916")
+;;      (:hr)
+;;      (str (get-debates)))
+;;     ((:div :class "span-7 last")
+;;      (when-bind (news (get-news))
+;;      		(htm
+;;      		 (:h3 "News")
+;;      		 (str news)))
+;;      (str *twitter-include*)
+;;      ;(str *twitter-flash-include*)
  
-     )))				
+;;      )))				
 
-(hunchentoot:define-easy-handler (new-first-page :uri "/new-welcome.html")
+(hunchentoot:define-easy-handler (new-first-page :uri "/welcome.html")
     ()
   (flet ((print-top-n-by-tag-name (tag-name n)
 	   (let* ((tag (get-tag-by-name tag-name))
-		  (articles (get-tagged-of-type tag 'article)))
-	     (html (:h2 ((:a :href (get-url tag)) (str tag-name)))
+		  (articles (sticky-sort (get-tagged-of-type tag 'article))))
+	     (html (:h2 ((:a :class "headerlink" :href (get-url tag)) (str tag-name)))
 		   (dolist (a (subseq articles 0 (min n (length articles))))
 		     (htm (str (display a (short-display)))))))))
     (with-standard-page (:title "Welcome to the Reform website")
@@ -264,9 +264,10 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
        (:hr)
        (str (print-top-n-by-tag-name "European Union" 2)))
       ((:div :class "span-12 last")
-       ((:p :align "center")  (:img :src (get-random-candidate-image)) (:br)
-	((:a :href "/mcnamara") "Michael McNamara - Reform candidate"))
-       (:hr)
+       ((:p :align "center")  ;; (:img :src (get-random-candidate-image)) (:br)
+	;; ((:a :href "/mcnamara") "Michael McNamara - Reform candidate")
+	)
+       ;; (:hr)				
        (:h2 "Debates")
        (dolist (debate (get-top-n 'debate 10))
 	 (htm (str (display debate (short-display)))))

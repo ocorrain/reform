@@ -34,7 +34,9 @@
       *comment-span*
       (max (- *grid-columns* indent)  (+ *comment-span* *max-shrinkage*))))
 
-(defmethod print-comment ((c threaded-comment) &optional (indent 0))
+(defgeneric print-comment (comment &optional indent no-recurse))
+
+(defmethod print-comment ((c threaded-comment) &optional (indent 0) no-recurse)
   (html ((:div :class (get-comment-css indent))
 	 ((:div :class "span-1")
 	  (if-bind (user (get-user))
@@ -67,18 +69,17 @@
 				    ((:a :class "comment" :href (format nil "/delete-comment?comment=~A" (get-id c)))
 				     "delete"))))
 			  (:p (str (threaded-comment-form c))))))
-
-	  
 	 (:hr :class "space"))
-	 (if (get-children c)
-	     (str (print-comments (get-children c) (1+ indent))))))
+	(unless no-recurse
+	  (when (get-children c)
+	    (str (print-comments (get-children c) (1+ indent)))))))
 
-(defmethod print-comment ((c deleted-comment) &optional (indent 0))
+(defmethod print-comment ((c deleted-comment) &optional (indent 0) no-recurse)
   (html ((:div :class (get-comment-css indent))
 	 "(deleted)")
-	(if (get-children c)
-	    (str (print-comments (get-children c) (1+ indent))))))
-
+	(unless no-recurse
+	  (when (get-children c)
+	    (str (print-comments (get-children c) (1+ indent)))))))
 
 (defun threaded-comment-form (c)
   (html ((:form :id (get-id c) :style "display:none" :method "post" :action "/post-to-thread.html")

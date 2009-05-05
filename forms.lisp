@@ -108,7 +108,7 @@ Meteora.uses('Meteora.Editor');
 Meteora.onStart(
   function() {
     new Editor(
-      'story', { mode: 'basic' }
+      'story'
     );
   }
 );

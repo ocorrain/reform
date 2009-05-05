@@ -4,45 +4,29 @@
     ()
   (with-standard-page (:title "Michael McNamara - Candidate for the European elections")
     ((:div :class "candidate-display")
-     ((:div :class "span-16")
-      (:h2 "Michael McNamara - Candidate for the European elections")
-      (:h3 "Biography")
-      (:blockquote "Michael McNamara is a Clare-based farmer and practising barrister."
-		   (:br)
-		   "He has studied at University College Cork,
-     the Catholic University of Louvain and the King's Inns, Dublin
-     and previously worked for RT&Eacute;, the OSCE and the UN and has
-     also worked as a consultant on EU democratisation programmes in
-     the Middle East and South Asia."))
-     ((:div :class "span-8 last")
-      (:img :src (get-random-candidate-image)))
+     
      ((:div :class "span-24 last")
+      (:h2 "Michael McNamara - Candidate for the European elections")
       (:h2 "Policies"))
-
-
- 
-
- 
-
 
      ((:div :class "span-11 colborder")
 
-     ((:h3 :class "alt") "Agriculture") 
-     (:ul (:li "EU Law such as the Nitrates directive and Animal
-By-Products Regulations in a manner that no longer unfairly hampers
+      ((:h3 :class "alt") "Agriculture") 
+      (:ul (:li "EU Law such as the Nitrates directive and Animal
+By-Products Regulations must be applied nationally in a manner that no longer unfairly hampers
 Irish farmers."))
 
-     ((:h3 :class "alt") "Institutional Reform") 
-     (:ul (:li "The Lisbon Treaty is an important and welcome step in the
+      ((:h3 :class "alt") "Institutional Reform") 
+      (:ul (:li "The Lisbon Treaty is an important and welcome step in the
 reform of the European Union"))
-     ((:h3 :class "alt") "Financial Regulation") 
-     (:ul (:li "Only pan-national financial regulation in an EU-wide
+      ((:h3 :class "alt") "Financial Regulation") 
+      (:ul (:li "Only pan-national financial regulation in an EU-wide
 context can restore the credibility of the Irish financial system"))
-     ((:h3 :class "alt") "Immigration and Asylum") 
+      ((:h3 :class "alt") "Immigration and Asylum") 
 
  
 
-     (:ul (:li "Immigrants and their children are now part of the Irish
+      (:ul (:li "Immigrants and their children are now part of the Irish
 nation. It is time for a modern, transparent and humane immigration
 system to be put in place in Ireland, as is provided for in EU Law and
 the Common European Asylum System."))
@@ -77,12 +61,30 @@ powerless.")
 	   (:li "The current level of bureaucracy and duplication in local
 government is no longer sustainable."))
 
-;; (:h3 "European Union")
-;;       (:ul (:li "Institutional reform")
-;; 	   (:li "Financial regulation")
-;; 	   (:li "Fair application of EU law")
-;; 	   (:li "Regionalisation"))
-)
+      ;; (:h3 "European Union")
+      ;;       (:ul (:li "Institutional reform")
+      ;; 	   (:li "Financial regulation")
+      ;; 	   (:li "Fair application of EU law")
+      ;; 	   (:li "Regionalisation"))
+      )
+     ((:div :class "span-16")
+
+      (:h3 "Biography")
+      (:blockquote "Michael McNamara is a Clare-based farmer and practising barrister."
+		   (:br)
+		   "He has studied at University College Cork,
+     the Catholic University of Louvain,  Teagasc, and the King's Inns, Dublin
+     and previously worked for RT&Eacute;, the OSCE and the UN and has
+     also worked as a consultant on EU democratisation programmes in
+     the Middle East and South Asia."
+		   (:br)
+		   "He has been called to the Bar of Ireland and
+		   Northern Ireland and is a member of the Irish
+		   Martime Law Association and the Irish Society of
+		   International Law, as well as the Irish Farmers'
+		   Association."))
+     ((:div :class "span-8 last")
+      (:img :src (get-random-candidate-image)))
      ((:div :class "span-24 last")
       (:blockquote "The following articles from reform.ie are by Michael McNamara and outline his policy positions in more detail:"
 		   (fmt "~{~A~^, ~}." (mapcar (lambda (article)

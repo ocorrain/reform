@@ -32,15 +32,18 @@
 
 (defun get-top-with-sticky (class n)
   (let ((instances (ele:get-instances-by-class class)))
-    (subseq (sort (copy-list instances)
-		  (lambda (i1 i2)
-		    (cond ((and (sticky? i1)
-				(sticky? i2))
-			   (< (get-posted i1) (get-posted i2)))
-			  ((sticky? i1) t)
-			  ((sticky? i2) nil)
-			  (t (< (get-posted i1) (get-posted i2))))))
+    (subseq (sticky-sort instances)
 	    0 (min n (length instances)))))
+
+(defun sticky-sort (instances)
+  (sort (copy-list instances)
+	(lambda (i1 i2)
+	  (cond ((and (sticky? i1)
+		      (sticky? i2))
+		 (> (get-posted i1) (get-posted i2)))
+		((sticky? i1) t)
+		((sticky? i2) nil)
+		(t (< (get-posted i1) (get-posted i2)))))))
 
 (defmethod display :before ((obj post) (type display-short))
   (when (has-capability* 'poster)
@@ -157,6 +160,10 @@
 
 (defmethod display ((obj debate) (type display-short))
   (with-html-output-to-string (s)
+    (when (has-capability* 'poster)
+      (htm ((:a :href (format nil "/edit.html?instance-id=~A&type=~A"
+			 (get-id obj) (symbol-name (type-of obj))))
+       "[ edit ]")))
     ((:h3 :class "alt")  ((:a :href (get-url obj)) (str (get-motion obj))) )
     (when-bind (rubric (get-rubric obj))
       (htm (:blockquote (str rubric))))))
@@ -166,6 +173,10 @@
     ((:div :class "span-24 last")
      (unless (get-user)
        (htm ((:h4 :class "alt") ((:a :href "/login.html") "Log in ") " to vote and comment")))
+     (when (has-capability* 'poster)
+      (htm ((:a :href (format nil "/edit.html?instance-id=~A&type=~A"
+			 (get-id obj) (symbol-name (type-of obj))))
+       "[ edit ]")))
      ((:h2 :class "alt")  ((:a :href (get-url obj)) (str (get-motion obj))))
      (str (print-tag-links obj))
      (when-bind (rubric (get-rubric obj))
@@ -177,6 +188,10 @@
 
 (defmethod display ((obj tag) (type display-short))
   (with-html-output-to-string (s)
+    (when (has-capability* 'poster)
+      (htm ((:a :href (format nil "/edit.html?instance-id=~A&type=~A"
+			 (get-id obj) (symbol-name (type-of obj))))
+       "[ edit ]")))
     ((:h2 :class "alt") ((:a :href (get-url obj)) (str (get-tag-name obj))) )
     (when-bind (rubric (get-rubric obj))
       (htm (:blockquote (str rubric))))))
