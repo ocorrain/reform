@@ -166,7 +166,11 @@
        "[ edit ]")))
     ((:h3 :class "alt")  ((:a :href (get-url obj)) (str (get-motion obj))) )
     (when-bind (rubric (get-rubric obj))
-      (htm (:blockquote (str rubric))))))
+      (htm (:blockquote (str rubric))))
+    ((:p :style "color: #F10507;")
+     ((:a :href (get-url obj))
+      (fmt "~D comment~:P" (+ (length (get-comments-for obj))
+							   (length (get-comments-against obj))))) )))
 
 (defmethod display ((obj debate) (type display-full))
   (with-standard-page (:title (get-title obj) :ajax t)

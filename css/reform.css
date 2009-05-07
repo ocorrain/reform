@@ -47,10 +47,10 @@ p.menulink { font-size: 12pt;
 }
 
 body {
-    background-image:  none; /* url('/images/EU.jpg');   */
-    /* background-repeat: no-repeat; */
-    /* background-attachment: fixed; */
-    /* background-position: top; */
+    background-image: url('/images/splash.gif');
+    background-repeat:no-repeat;
+    background-position: 90% 0%; 
+
 }
 
 .alt {
@@ -78,4 +78,8 @@ a.comment:link, a.comment:visited, a.comment:active {
 
 .candidate-display ul {
     font-size: 120%;
+}
+
+.login {
+     padding: 1em;
 }

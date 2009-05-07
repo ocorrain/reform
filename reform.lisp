@@ -3,7 +3,7 @@
 
 (defmacro html (&body body)
   (let ((g (gensym "html-output")))
-    `(with-html-output-to-string (,g)
+    `(with-html-output-to-string (,g nil :indent t)
        ,@body)))
 
 (defparameter *reform-site* (load-time-value
@@ -192,10 +192,8 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
      ((:a :class "menulink" :href "/policy.html") "policy") "  /  "
      ((:a :class "menulink" :href "/articles.html") "articles") "  /  "
      ;; ((:a :class "menulink" :href "/news.html") "news") "  /  "
-     ;; ((:a :class "menulink" :href "/debates.html") "debates") "  /  "
-     (unless (get-user)
-       (htm ((:a :class "menulink" :href "/login.html") "login or register") "  /  "))
-     ((:a :class "menulink" :href "/about.html") "about us"))))
+     ((:a :class "menulink" :href "/debates.html") "debates") "  /  "
+     ((:a :class "menulink" :href "/about.html") "contact"))))
 
 
 
@@ -242,7 +240,41 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
  
 ;;      )))				
 
-(hunchentoot:define-easy-handler (new-first-page :uri "/welcome.html")
+;; (hunchentoot:define-easy-handler (new-first-page :uri "/welcome.html")
+;;     ()
+;;   (flet ((print-top-n-by-tag-name (tag-name n)
+;; 	   (let* ((tag (get-tag-by-name tag-name))
+;; 		  (articles (sticky-sort (get-tagged-of-type tag 'article))))
+;; 	     (html (:h2 ((:a :class "headerlink" :href (get-url tag)) (str tag-name)))
+;; 		   (dolist (a (subseq articles 0 (min n (length articles))))
+;; 		     (htm (str (display a (short-display)))))))))
+;;     (with-standard-page (:title "Welcome to the Reform website")
+;;       ((:div :class "span-24 last")
+;;        ((:blockquote :style "font-size:14pt;font-family:sans-serif;font-style:normal;")
+;; 	(:p "The Republic guarantees religious and civil
+;; 	liberty, equal rights and equal opportunities to all its
+;; 	citizens, and declares its resolve to pursue the happiness and
+;; 	prosperity of the whole nation and all of its parts,
+;; 	cherishing all of the children of the nation equally..." )
+;; 	((:p :align "right") "&mdash;Proclamation of Irish independence, Easter Monday 1916")))
+;;       ((:div :class "span-11 colborder")
+;;        (str (print-top-n-by-tag-name "Local government" 2))
+;;        (:hr)
+;;        (str (print-top-n-by-tag-name "European Union" 2)))
+;;       ((:div :class "span-12 last")
+;;        ((:p :align "center")  ;; (:img :src (get-random-candidate-image)) (:br)
+;; 	;; ((:a :href "/mcnamara") "Michael McNamara - Reform candidate")
+;; 	)
+;;        ;; (:hr)				
+;;        (:h2 "Debates")
+;;        (dolist (debate (get-top-n 'debate 10))
+;; 	 (htm (str (display debate (short-display)))))
+;;        (:hr)
+;;        (:h2 "News")
+;;        (str (get-news))
+;;        ))))
+
+(hunchentoot:define-easy-handler (first-page :uri "/welcome.html")
     ()
   (flet ((print-top-n-by-tag-name (tag-name n)
 	   (let* ((tag (get-tag-by-name tag-name))
@@ -250,31 +282,76 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 	     (html (:h2 ((:a :class "headerlink" :href (get-url tag)) (str tag-name)))
 		   (dolist (a (subseq articles 0 (min n (length articles))))
 		     (htm (str (display a (short-display)))))))))
-    (with-standard-page (:title "Welcome to the Reform website")
-      ((:div :class "span-24 last")
-       ((:blockquote :style "font-size:14pt;font-family:sans-serif;font-style:normal;")
+    (with-standard-page (:title "Welcome to reform.ie" :ajax t)
+      (:script :type "text/javascript" :src "/js/rate.js")
+      ((:div :class "span-22 append-1 prepend-1 last")
+       ((:blockquote :style "font-style:italic;")
 	(:p "The Republic guarantees religious and civil
 	liberty, equal rights and equal opportunities to all its
 	citizens, and declares its resolve to pursue the happiness and
 	prosperity of the whole nation and all of its parts,
-	cherishing all of the children of the nation equally" )
+	cherishing all of the children of the nation equally..." )
 	((:p :align "right") "&mdash;Proclamation of Irish independence, Easter Monday 1916")))
-      ((:div :class "span-11 colborder")
-       (str (print-top-n-by-tag-name "Local government" 2))
-       (:hr)
-       (str (print-top-n-by-tag-name "European Union" 2)))
-      ((:div :class "span-12 last")
+      ((:div :class "span-12" :style "font-size:120%")
+       (:h2 "Reform.ie")
+       (:p "Reform.ie is a political platform that advocates the
+       reform of local government in Ireland and the continuing reform
+       of the European Union, with Ireland at its heart.")
+       (:p "We believe that a majority of Irish people share these
+       views, and this website is intended as a forum for debate and
+       discussion.")
+       (:p ((:a :href "/mcnamara") "Michael McNamara") " is standing
+       as a candidate for the European Parliament representing
+       reform.ie in the North West Constituency.")
+       (:p "reform.ie is not linked to any other political party or
+movement in Ireland or elsewhere, nor are we funded by any political
+or economic entity."))
+      ((:div :class "span-11 last" :style "font-size: 120%")
+       (if-bind (user (get-user))
+	       (htm (:h2 "Welcome to reform.ie")
+		     (:p (fmt "Welcome, ~A!  You have ~D new message~:P"
+			      (get-username user) (length (get-messages user)))
+			 (:hr :class "space")
+			 ((:a :href "/messages") "View message box")))
+	       (htm (:p "Please join up and participate in the " ((:a :href "/debates.html") "debates")
+			", read the " ((:a :href "/articles.html") "articles")
+			" and propose ideas of your own.")((:div :id "login-form"  :class "login")
+		      (str (login-form)))
+		     ((:div :id "registration-form" :class "login" :style "display: none;")
+		      (str (registration-form))))))
+      ((:div :class "span-24 last" )
+       (:h2 "Policies"))
+      ((:div :class "span-12"  :style "font-size: 120%")
+       (str (tag-list "Local government" "Accountability" "Rationalisation" "Planning")))
+      
+      ((:div :class "span-12 last" :style "font-size: 120%")
+       (str (tag-list "European Union" "Regionalisation" "Institutional reform"
+		      "Fair application of EU law" "Financial regulation"))
        ((:p :align "center")  ;; (:img :src (get-random-candidate-image)) (:br)
 	;; ((:a :href "/mcnamara") "Michael McNamara - Reform candidate")
 	)
        ;; (:hr)				
-       (:h2 "Debates")
-       (dolist (debate (get-top-n 'debate 10))
-	 (htm (str (display debate (short-display)))))
-       (:hr)
-       (:h2 "News")
-       (str (get-news))
+       ;; (:h2 "Debates")
+       ;; (dolist (debate (get-top-n 'debate 10))
+       ;; 	 (htm (str (display debate (short-display)))))
+       ;; (:hr)
+       ;; (:h2 "News")
+       ;; (str (get-news))
        ))))
+
+(defun tag-list (header &rest tags)
+  (html (:h3 ((:a :href (tag-url header)) (str header)))
+	(:ul (dolist (tag tags)
+	       (htm (:li (str (tag-link tag))))))))
+
+(defun tag-url (tag-name)
+  (when-bind (tag (get-tag-by-name tag-name))
+	     (get-url tag)))
+
+(defun tag-link (tag-name)
+  (if-bind (tag (get-tag-by-name tag-name))
+	   (html ((:a :href (get-url tag)) (str (get-tag-name tag))))
+	   tag-name))
 
 
     

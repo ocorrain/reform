@@ -117,8 +117,20 @@
 	     (:input :type "hidden" :name "rtype" :value rtype)))
       (:input :type "submit" :name "submit" :value "Register")))))
 
+(defun login-form ()
+  (html ((:h2 :class "alt") "Log in or " ((:a :onclick "javascript:toggle_login_forms();" :href "#")
+					   "Join up"))
+	 ((:form :method "post" :enctype "multipart/form-data" :action "/login.html")
+	  (:table
+	   (:tr (:td ((:label :for "username") "Username"))
+		(:td (:input :type "text" :name "username")))
+	   (:tr (:td ((:label :for "password") "Password"))
+		(:td (:input :type "password" :name "password"))))
+	  (:input :type "submit" :name "submit" :value "log in"))))
+
 (defun registration-form ()
-  (html ((:h2 :class "alt") "Register a new account")
+  (html ((:h2 :class "alt") ((:a :onclick "javascript:toggle_login_forms();" :href "#")
+			     "Log in") " or Join up")
 	((:form :method "post" :enctype "multipart/form-data" :action "/register.html")
 	 (:table
 	  (:tr (:td ((:label :for "username") "Username"))
