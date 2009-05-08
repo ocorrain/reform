@@ -95,8 +95,13 @@
 
 (defmethod display ((obj person) (type display-short))
   (with-html-output-to-string (s)
+    (when (has-capability* 'admin)
+      (htm ((:a :href (format nil "/edit.html?instance-id=~A&type=~A"
+			      (get-id obj) (symbol-name (type-of obj))))
+	    "[ edit ]")))
     (str (get-headline obj))
-    (:i "&mdash; " (str (get-story obj)))))
+    (:br)
+    (:i (str (get-story obj)))))
 
 (defmethod display ((obj article) (type display-full))
   (with-standard-page (:title (get-title obj) :ajax t)

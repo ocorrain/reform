@@ -23,6 +23,25 @@
 	     (str (get-title (get-debate message))))
 	    (str (print-comment message 0 t)))))
 
+(defmethod print-message ((message welcome-message))
+  (html (:h3 "Welcome to reform.ie!")
+	(str (welcome message))))
+
+(defclass welcome-message (comment)
+  ((welcome :initarg :welcome :initform nil :accessor welcome))
+  (:metaclass ele:persistent-metaclass))
 
 
+(defun make-welcome-message ()
+  (make-instance 'welcome-message
+		 :welcome (html (:p "Your account has been created.
+		 Please participate in
+		 the " ((:a :href "/debates.html") "debates")
+		 ", read the " ((:a :href "/articles.html") "articles")
+		 " and propose ideas of your own."
+		 (:br)
+		 "We hope you enjoy the site!"
+		 (:br)
+		 "reform.ie"))
+		 ))
 

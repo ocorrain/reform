@@ -6,7 +6,7 @@
     (with-standard-page (:title "Michael McNamara - Candidate for the European elections")
       (htm  ((:div :class "candidate-display")
 	     ((:div :class "span-12")
-	      (:img :src (format nil "/images/candidates/mcnamara~D.jpg" number)))
+	      (:img :src (get-random-candidate-image)))
 	     ((:div :class "span-12 last")
 	      (:h3 "Michael McNamara - Candidate for the European elections")
 	      (:p "email " ((:a :href "mailto:mcnamara@reform.ie") "mcnamara@reform.ie")
@@ -17,8 +17,7 @@
 					     (remove-if-not (lambda (article)
 							      (string-equal (get-author article) "Michael McNamara"))
 							    (get-in-tag-order 'article)))))
-	      (:hr :class "space")
-	      (:p (:i (str caption))))
+	      )
        
 	     ((:div :class "span-24 last")
 	      (:h2 "Policies"))
@@ -94,11 +93,12 @@ government is no longer sustainable."))
 			   (:br)
 			   "He has been called to the Bar of Ireland and
 		   Northern Ireland and is a member of the Irish
-		   Martime Law Association and the Irish Society of
+		   Maritime Law Association and the Irish Society of
 		   International Law, as well as the Irish Farmers'
 		   Association."))
 	     ((:div :class "span-8 last")
-	      (:img :src (get-random-candidate-image))))))))
+	      (:img :src (format nil "/images/candidates/mcnamara~D.jpg" number))
+	      (:p (:i (str caption)))))))))
 
 
 
@@ -106,7 +106,13 @@ government is no longer sustainable."))
     ()
   (mick))
 
+(hunchentoot:define-easy-handler (mcn :uri "/McNamara")
+    ()
+  (mick))
 
+(hunchentoot:define-easy-handler (mcn2 :uri "/MCNAMARA")
+    ()
+  (mick))
 
 (defun get-random-candidate-image ()
   (format nil "/images/candidates/mcnamara~A.jpg" (+ 3 (random 4))))

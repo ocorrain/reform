@@ -133,6 +133,7 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
   `(with-html-output-to-string (*standard-output* nil :prologue t :indent t)
      (setf (hunchentoot:content-type*) "text/html; charset=utf-8")
      (setf (html-mode) :sgml)
+     (setf (hunchentoot:header-out :cache-control) "no-cache, must-revalidate")
      (:html
       (:head (:title (fmt "~A - reform.ie" ,title))
 	     (str *css-include*)
@@ -143,10 +144,8 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
        (when (and ,ajax (boundp 'hunchentoot:*session*) hunchentoot:*session*)
 	 (htm (:script :type "text/javascript" :src "/js/rate.js")
 	      (str (ht-ajax:generate-prologue *ajax-processor*))))
-       
        ((:div :class "container")
 	((:div :class "span-10")
-	 
 	 ((:h1 :class "alt") ((:a :href "/welcome.html") (:img :src "/images/reform.jpg" :alt "reform.ie")))
 	 ((:h3 :class "alt") (str (get-nugget))))
 	((:div :class "span-14 last")
@@ -301,8 +300,8 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
        views, and this website is intended as a forum for debate and
        discussion.")
        (:p ((:a :href "/mcnamara") "Michael McNamara") " is standing
-       as a candidate for the European Parliament representing
-       reform.ie in the North West Constituency.")
+       as a candidate for the European Parliament in the North West
+       Constituency on these policies. ")
        (:p "reform.ie is not linked to any other political party or
 movement in Ireland or elsewhere, nor are we funded by any political
 or economic entity."))
@@ -560,7 +559,7 @@ economic entity."
        
        ((:h1 :class "alt") "Contact details")
        ((:blockquote :style "font-size:12pt;font-family:sans-serif;color:black;font-style: normal;text-align:justify;")
-	(str "General contact &mdash; ") ((:a :href "mailto:info@reform.ie") (:i "info@reform.ie"))
+	((:a :href "mailto:info@reform.ie") (:i "info@reform.ie")) 
 	(:br) (:br)
 	(dolist (p (ele:get-instances-by-class 'person))
 	  (htm (str (display p (short-display)))
