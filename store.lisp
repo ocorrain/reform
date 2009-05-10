@@ -49,9 +49,20 @@
    (total-comments :initarg :total :initform 0 :accessor get-total-comments))
   (:metaclass ele:persistent-metaclass))
 
+(defclass press (article)
+  ()
+  (:metaclass ele:persistent-metaclass))
+
 (defclass person (news)
   ()
   (:metaclass ele:persistent-metaclass))
+
+(defclass contact (post)
+  ((name :initarg :name :initform "" :accessor get-name)
+   (organisation :initarg :organisation :initform "" :accessor get-org)
+   (details :initarg :details :initform "" :accessor get-details))
+  (:metaclass ele:persistent-metaclass))
+
 
 (defclass debate (post)
   ((motion :initarg :motion :initform "" :accessor get-motion)

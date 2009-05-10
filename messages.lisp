@@ -2,6 +2,11 @@
 
 ;; Messaging interface for replies, admin messages, broadcast messages etc
 
+(defclass welcome-message (comment)
+  ((welcome :initarg :welcome :initform nil :accessor welcome))
+  (:metaclass ele:persistent-metaclass))
+
+
 (hunchentoot:define-easy-handler (show-messages :uri "/messages")
     ()
   (if-bind (user (get-user))
@@ -27,9 +32,7 @@
   (html (:h3 "Welcome to reform.ie!")
 	(str (welcome message))))
 
-(defclass welcome-message (comment)
-  ((welcome :initarg :welcome :initform nil :accessor welcome))
-  (:metaclass ele:persistent-metaclass))
+
 
 
 (defun make-welcome-message ()

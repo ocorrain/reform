@@ -129,6 +129,19 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 
 ")
 
+(defparameter *paypal*
+"<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\">
+<input type=\"hidden\" name=\"cmd\" value=\"_s-xclick\">
+<input type=\"hidden\" name=\"encrypted\" value=\"-----BEGIN PKCS7-----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-----END PKCS7-----
+\">
+<input type=\"image\" src=\"https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif\" border=\"0\" name=\"submit\" alt=\"PayPal - The safer, easier way to pay online!\">
+<img alt=\"\" border=\"0\" src=\"https://www.paypal.com/en_US/i/scr/pixel.gif\" width=\"1\" height=\"1\">
+</form>"
+
+)
+
+
+
 (defmacro with-standard-page ((&key ajax (title "Welcome to Reform.ie")) &body body)
   `(with-html-output-to-string (*standard-output* nil :prologue t :indent t)
      (setf (hunchentoot:content-type*) "text/html; charset=utf-8")
@@ -317,7 +330,9 @@ or economic entity."))
 			" and propose ideas of your own.")((:div :id "login-form"  :class "login")
 		      (str (login-form)))
 		     ((:div :id "registration-form" :class "login" :style "display: none;")
-		      (str (registration-form))))))
+		      (str (registration-form)))))
+       (str *paypal*)) 
+
       ((:div :class "span-24 last" )
        (:h2 "Policies"))
       ((:div :class "span-12"  :style "font-size: 120%")

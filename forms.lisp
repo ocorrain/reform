@@ -115,6 +115,71 @@ Meteora.onStart(
 
 ")))
 
+;; (defmethod html-form ((object (eql 'contact)) output-stream &optional new)
+;;   (with-html-output (s output-stream :indent t)
+;;     (:fieldset
+;;      (:legend "Contact")
+;;      (:table
+;;       (:tr (:td ((:label :for "name") "Name"))
+;; 	   (:td (:input :type "text" :name "name")))
+;;       (:tr (:td ((:label :for "organisation") "Organisation"))
+;; 	   (:td (:input :type "text" :name "organisation"))))
+     
+;;      ((:label :for "details") "Details")
+;;      ((:textarea :id "story" :name "story" :style "height:200px;width:500px;")
+
+;;       ;; (:tr (:td ((:label :for "upload") "Upload")
+;;       ;; 		(:p "Only HTML and plain text files"))
+;;       ;; 	   (:td (:input :type "file" :name "upload")))
+;;       )
+;;      (:input :type "submit" :name "submit" :value "Save")
+;;     ((:script :type "text/javascript")
+;;      "
+;; Meteora.uses('Meteora.Editor');
+
+;; Meteora.onStart(
+;;   function() {
+;;     new Editor(
+;;       'story', { mode: 'nano' }
+;;     );
+;;   }
+;; );
+
+;; ")))))
+
+;; (defmethod html-form ((object contact) output-stream &optional new)
+;;   (with-html-output (s output-stream :indent t)
+;;     (:fieldset
+;;      (:legend "Contact")
+;;      (:table
+;;       (:tr (:td ((:label :for "name") "Name"))
+;; 	   (:td (:input :type "text" :name "name"
+;; 			:value (esc (or (get-name object) "")))))
+;;       (:tr (:td ((:label :for "organisation") "Organisation"))
+;; 	   (:td (:input :type "text" :name "organisation"
+;; 			:value (esc (or (get-org object) ""))))))
+
+;;      ((:label :for "details") "Details")     
+;;      ((:textarea :id "details" :name "details" :style "height:200px;width:500px;")
+;;       (str (get-details object))) 
+;;       ;; (:tr (:td ((:label :for "upload") "Upload")
+;;       ;; 		(:p "Only HTML and plain text files"))
+;;       ;; 	   (:td (:input :type "file" :name "upload")))
+;;       )
+;;     ((:script :type "text/javascript")
+;;      "
+;; Meteora.uses('Meteora.Editor');
+
+;; Meteora.onStart(
+;;   function() {
+;;     new Editor(
+;;       'story', { mode: 'nano' }
+;;     );
+;;   }
+;; );
+
+;; ")))
+
 
 (defmethod html-form ((object debate) output-stream &optional new)
   (with-html-output (s output-stream :indent t)
@@ -129,7 +194,7 @@ Meteora.onStart(
 	   (:td ((:textarea :name "rubric" :rows 10 :cols 62)
 		 (str (or (get-rubric object) "")))))))))
 
-(defparameter *capabilities* '(admin poster moderator))
+(defparameter *capabilities* '(admin poster moderator member))
 
 (defmethod html-form ((object user) output-stream &optional new)
   (with-html-output (s output-stream :indent t)
@@ -223,15 +288,15 @@ Meteora.onStart(
   (when-bind (author (get-form-field 'author parameters))
     (setf (get-author obj) author))
   (when-bind (story (get-form-field 'story parameters))
-	     (setf (get-story obj) story))
-  ;; (when-bind (upload (get-form-field 'upload parameters))
-  ;;   (destructuring-bind (path filename content-type)
-  ;; 	upload
-  ;;     (declare (ignore filename))
-  ;;     (if (member content-type *acceptable-content-types* :test #'equal)
-  ;; 	  (setf (get-story obj) (html-clean path))
-  ;; 	  (error "Unacceptable content"))))
-  )
+	     (setf (get-story obj) story)))
+
+(defmethod apply-changes ((obj contact) parameters)
+  (when-bind (title (get-form-field 'title parameters))
+    (setf (get-title obj) title))
+  (when-bind (organisation (get-form-field 'organisation parameters))
+    (setf (get-org obj) organisation))
+  (when-bind (details (get-form-field 'details parameters))
+	     (setf (get-details obj) story)))
 
 (defmethod apply-changes ((obj debate) parameters)
   (when-bind (motion (get-form-field 'motion parameters))

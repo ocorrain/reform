@@ -17,17 +17,18 @@
   (- *grid-columns* *comment-span* *max-shrinkage*))
 
 (defun get-comment-css (indent)
-  (let ((append (- *grid-columns* *comment-span* indent)))
-    (cond ((and (> indent 0) (> append 0))
-	   (format nil "span-~A prepend-~A append-~A last"
-		   *comment-span* indent append))
-	  ((and (> indent 0) (<= append 0) (>= append *max-shrinkage*)) 
-	   (format nil "span-~A prepend-~A last"
-		   (+ *comment-span* append) indent))
-	  ((and (> indent 0) (<= append 0)) 
-	   (format nil "span-~A prepend-~A last"
-		   (+ *comment-span* *max-shrinkage*) (min indent (get-max-indent))))
-	  (t (format nil "span-~A append-~A last" *comment-span* append)))))
+  (concatenate 'string "comment "
+	       (let ((append (- *grid-columns* *comment-span* indent)))
+		 (cond ((and (> indent 0) (> append 0))
+			(format nil "span-~A prepend-~A append-~A last"
+				*comment-span* indent append))
+		       ((and (> indent 0) (<= append 0) (>= append *max-shrinkage*)) 
+			(format nil "span-~A prepend-~A last"
+				(+ *comment-span* append) indent))
+		       ((and (> indent 0) (<= append 0)) 
+			(format nil "span-~A prepend-~A last"
+				(+ *comment-span* *max-shrinkage*) (min indent (get-max-indent))))
+		       (t (format nil "span-~A append-~A last" *comment-span* append))))))
 
 (defun get-comment-span (indent)
   (if (< indent (- *grid-columns* *comment-span*))

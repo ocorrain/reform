@@ -17,3 +17,9 @@ function toggle_login_forms() {
     toggle_visible('registration-form');
     return false;
 }
+
+function toggle_contact_form() {
+    toggle_visible('contacts-form');
+    toggle_visible('new-contact');
+    return false;
+}

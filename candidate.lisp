@@ -17,6 +17,9 @@
 					     (remove-if-not (lambda (article)
 							      (string-equal (get-author article) "Michael McNamara"))
 							    (get-in-tag-order 'article)))))
+
+	      (:p (str *paypal*))
+
 	      )
        
 	     ((:div :class "span-24 last")
@@ -123,3 +126,4 @@ government is no longer sustainable."))
 
 (defun get-suit ()
   (random-elt *suits*))
+
