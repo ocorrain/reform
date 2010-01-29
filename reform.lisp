@@ -158,10 +158,14 @@ src=\"http://twitter.com/statuses/user_timeline/reformdotie.json?callback=twitte
 	 (htm (:script :type "text/javascript" :src "/js/rate.js")
 	      (str (ht-ajax:generate-prologue *ajax-processor*))))
        ((:div :class "container")
-	((:div :class "span-10")
+	(:div :class "header")
+	
+	((:div :class "span-10 prepend-7 append-7 last")
 	 ((:h1 :class "alt") ((:a :href "/welcome.html") (:img :src "/images/reform.jpg" :alt "reform.ie")))
+	 (:h2 "unk unk unk")
 	 ((:h3 :class "alt") (str (get-nugget))))
-	((:div :class "span-14 last")
+	
+	((:div :class "span-24 last")
 	 (user-pane *standard-output*))
 	(:hr :class "space")
 	;; ((:div :class "span-24 last")

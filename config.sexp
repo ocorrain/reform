@@ -1,3 +1,5 @@
+;; -*- Lisp -*-
+;; edit my-config.sexp instead
 ((:css-dir . "/home/reform/src/blueprint-css/")
  (:image-dir . "/home/reform/lisp/site/reform/images/")
  (:js-dir . "/home/reform/lisp/site/reform/js/")
